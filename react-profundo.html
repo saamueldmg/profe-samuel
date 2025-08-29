@@ -79,6 +79,106 @@
 
     <main class="container mx-auto px-6 py-12">
 
+        <section id="project-structure" class="mb-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold">Estructura de un Proyecto</h2>
+                <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">Una organización clara de carpetas y archivos es
+                    clave para mantener un proyecto escalable y fácil de entender.</p>
+            </div>
+            <div class="concept-card">
+                <h3 class="text-xl font-semibold text-center mb-6">Disposición Típica de Carpetas</h3>
+                <pre class="code-block text-sm"><code>my-app/
+├── node_modules/      # Dependencias que instala npm o yarn
+├── public/            # Archivos estáticos (imágenes, favicon, etc.)
+├── src/               # 📌 Aquí va TODO tu código React
+│   ├── App.jsx        # Componente principal de tu aplicación
+│   ├── main.jsx       # Punto de entrada donde se renderiza &lt;App /&gt;
+│   ├── components/    # Carpeta donde guardas tus componentes
+│   │   ├── Header.jsx
+│   │   └── Card.jsx
+│   └── styles/        # Archivos CSS o Tailwind
+│
+├── package.json       # Configuración del proyecto y dependencias
+└── vite.config.js     # Configuración si usas Vite</code></pre>
+            </div>
+        </section>
+
+        <hr class="my-16 border-gray-200">
+
+        <section id="functional-components" class="mb-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold">Componentes Funcionales</h2>
+                <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">Son funciones de JavaScript que devuelven
+                    elementos de React (usualmente escritos en JSX). Son la forma moderna y estándar de escribir
+                    componentes.</p>
+            </div>
+            <div class="concept-card">
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <h4 class="font-semibold mb-2 text-center">Componente Básico</h4>
+                        <pre class="code-block text-sm"><code>// Un componente es solo una función que retorna JSX.
+const Saludo = () => {
+  return &lt;h1&gt;Hola Mundo desde un Componente&lt;/h1&gt;;
+};
+
+// Se puede simplificar si solo retorna una línea.
+const Boton = () => &lt;button&gt;Haz clic&lt;/button&gt;;</code></pre>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold mb-2 text-center">Uso de Props</h4>
+                        <pre class="code-block text-sm"><code>// Las props son un objeto que recibe el componente.
+const SaludoPersonalizado = (props) => {
+  return &lt;h1&gt;Hola, {props.nombre}&lt;/h1&gt;;
+};
+
+// Usando desestructuración (más común).
+const SaludoElegante = ({ nombre }) => {
+    return &lt;h1&gt;Hola, {nombre}&lt;/h1&gt;;
+}
+
+// Uso: &lt;SaludoElegante nombre="Samuel" /&gt;</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <hr class="my-16 border-gray-200">
+
+        <section id="events" class="mb-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold">Manejo de Eventos</h2>
+                <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">React puede responder a interacciones del
+                    usuario como clics, cambios en inputs y más, usando manejadores de eventos como `onClick` y
+                    `onChange`.</p>
+            </div>
+            <div class="concept-card">
+                <h3 class="text-xl font-semibold text-center mb-6">Ejemplo de Evento `onChange`</h3>
+                <div class="p-6 bg-gray-50 rounded-lg text-center">
+                    <input type="text" id="nameInput" placeholder="Escribe tu nombre aquí"
+                        class="w-full max-w-xs px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm">
+                    <p class="mt-4 text-lg">Hola, <span id="nameOutput" class="font-bold text-purple-600">...</span></p>
+                </div>
+                <pre class="code-block mt-6 text-sm"><code>import { useState } from 'react';
+
+function NameInput() {
+  const [nombre, setNombre] = useState('');
+
+  const handleInputChange = (event) => {
+    setNombre(event.target.value);
+  };
+
+  return (
+    &lt;div&gt;
+      &lt;input type="text" value={nombre} onChange={handleInputChange} /&gt;
+      &lt;p&gt;Hola, {nombre}&lt;/p&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+            </div>
+        </section>
+
+        <hr class="my-16 border-gray-200">
+
         <section id="conditional-rendering" class="mb-20">
             <div class="text-center mb-12">
                 <h2 class="text-3xl md:text-4xl font-bold">Renderizado Condicional</h2>
@@ -214,6 +314,13 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Manejo de Eventos (onChange)
+            const nameInput = document.getElementById('nameInput');
+            const nameOutput = document.getElementById('nameOutput');
+            nameInput.addEventListener('keyup', (event) => {
+                nameOutput.textContent = event.target.value || '...';
+            });
+
             // Renderizado Condicional
             const toggleLoginBtn = document.getElementById('toggleLoginBtn');
             const welcomeMessage = document.getElementById('welcomeMessage');
