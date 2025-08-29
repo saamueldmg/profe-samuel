@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React: Conceptos a Profundidad</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF8;
+            color: #383838;
+        }
+
+        .code-block {
+            background-color: #2D2D2D;
+            color: #EAEAEA;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .concept-card {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            border: 1px solid #f3f4f6;
+        }
+
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .tab-button.active {
+            background-color: #8B5CF6;
+            color: white;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+        }
+
+        .tab-button:not(.active) {
+            background-color: #e5e7eb;
+            color: #4b5563;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-purple-600">
+                Profundizando en React
+            </h1>
+            <a href="./index.html"
+                class="bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors">
+                &larr; Volver a la Guía
+            </a>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+
+        <section id="conditional-rendering" class="mb-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold">Renderizado Condicional</h2>
+                <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">Muestra u oculta elementos de la interfaz según
+                    el estado de tu aplicación. Es fundamental para crear UIs dinámicas.</p>
+            </div>
+
+            <div class="concept-card">
+                <h3 class="text-xl font-semibold text-center mb-6">Ejemplo Interactivo</h3>
+                <div class="flex flex-col items-center justify-center p-6 bg-gray-50 rounded-lg mb-6">
+                    <div id="welcomeMessage"
+                        class="p-4 bg-green-100 text-green-800 rounded-lg text-center transition-opacity duration-300">
+                        ¡Bienvenido! Has iniciado sesión.
+                    </div>
+                    <div id="loginPrompt"
+                        class="hidden p-4 bg-yellow-100 text-yellow-800 rounded-lg text-center transition-opacity duration-300">
+                        Por favor, inicia sesión para continuar.
+                    </div>
+                    <button id="toggleLoginBtn"
+                        class="mt-6 bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-6 rounded-full">
+                        Cerrar Sesión
+                    </button>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <h4 class="font-semibold mb-2 text-center">Operador Ternario</h4>
+                        <pre
+                            class="code-block text-sm"><code>{ isLoggedIn ? &lt;Welcome /&gt; : &lt;Login /&gt; }</code></pre>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold mb-2 text-center">Operador Lógico `&&`</h4>
+                        <pre class="code-block text-sm"><code>{ isLoggedIn && &lt;Welcome /&gt; }</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <hr class="my-16 border-gray-200">
+
+        <section id="lists-keys" class="mb-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold">Manejo de Listas y Keys</h2>
+                <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">Para mostrar una colección de elementos, se
+                    utiliza el método `.map()`. La prop `key` es crucial para que React identifique cada elemento de
+                    forma única y optimice su renderizado.</p>
+            </div>
+
+            <div class="concept-card">
+                <h3 class="text-xl font-semibold text-center mb-6">Lista de Tareas Interactiva</h3>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="p-6 bg-gray-50 rounded-lg">
+                        <h4 class="font-semibold mb-4">Añadir Nueva Tarea</h4>
+                        <div class="flex space-x-2">
+                            <input type="text" id="taskInput" placeholder="Ej: Aprender React"
+                                class="flex-grow block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm">
+                            <button id="addTaskBtn"
+                                class="bg-purple-600 text-white font-bold py-2 px-4 rounded-md hover:bg-purple-700">Añadir</button>
+                        </div>
+                    </div>
+                    <div class="p-6 bg-gray-50 rounded-lg">
+                        <h4 class="font-semibold mb-4">Tareas Pendientes</h4>
+                        <ul id="taskList" class="space-y-2">
+                        </ul>
+                    </div>
+                </div>
+                <pre class="code-block mt-6 text-sm"><code>const taskItems = tasks.map((task) =>
+  &lt;li key={task.id}&gt;
+    {task.text}
+  &lt;/li&gt;
+);</code></pre>
+            </div>
+        </section>
+
+        <hr class="my-16 border-gray-200">
+
+        <section id="use-effect" class="mb-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold">El Hook `useEffect`</h2>
+                <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">Permite ejecutar "efectos secundarios" en
+                    componentes. Ideal para tareas como peticiones a APIs, suscripciones o manipulación manual del DOM
+                    después del renderizado.</p>
+            </div>
+
+            <div class="concept-card">
+                <h3 class="text-xl font-semibold text-center mb-6">Simulación de Petición a una API</h3>
+                <div class="p-6 bg-gray-50 rounded-lg text-center">
+                    <button id="fetchDataBtn"
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full mb-4">
+                        Cargar Datos de Usuario
+                    </button>
+                    <div id="userDataContainer"
+                        class="p-4 bg-white border rounded-md min-h-[100px] flex items-center justify-center">
+                        <p class="text-gray-500">Los datos del usuario aparecerán aquí...</p>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <div class="flex justify-center border-b border-gray-200">
+                        <div class="flex space-x-2 p-1 bg-gray-100 rounded-t-lg">
+                            <button class="tab-button active" data-tab="tab1">Ejecutar al hacer clic</button>
+                            <button class="tab-button" data-tab="tab2">Ejecutar una sola vez</button>
+                        </div>
+                    </div>
+                    <div class="p-2">
+                        <div id="tab1" class="tab-content active">
+                            <pre class="code-block text-sm"><code>useEffect(() => {
+  // Este código se ejecuta CADA VEZ que
+  // el estado 'shouldFetch' cambia.
+  if (shouldFetch) {
+    fetchUserData();
+  }
+}, [shouldFetch]); // Array de dependencias</code></pre>
+                        </div>
+                        <div id="tab2" class="tab-content">
+                            <pre class="code-block text-sm"><code>useEffect(() => {
+  // Este código se ejecuta UNA SOLA VEZ,
+  // después del primer renderizado.
+  console.log('Componente montado');
+}, []); // Array de dependencias vacío</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white mt-12 border-t">
+        <div class="container mx-auto px-6 py-4 text-center text-gray-500">
+            <p>&copy; 2025 Guía Interactiva. Creada para facilitar el aprendizaje.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Renderizado Condicional
+            const toggleLoginBtn = document.getElementById('toggleLoginBtn');
+            const welcomeMessage = document.getElementById('welcomeMessage');
+            const loginPrompt = document.getElementById('loginPrompt');
+            let isLoggedIn = true;
+
+            toggleLoginBtn.addEventListener('click', () => {
+                isLoggedIn = !isLoggedIn;
+                if (isLoggedIn) {
+                    welcomeMessage.classList.remove('hidden');
+                    loginPrompt.classList.add('hidden');
+                    toggleLoginBtn.textContent = 'Cerrar Sesión';
+                } else {
+                    welcomeMessage.classList.add('hidden');
+                    loginPrompt.classList.remove('hidden');
+                    toggleLoginBtn.textContent = 'Iniciar Sesión';
+                }
+            });
+
+            // Manejo de Listas y Keys
+            const taskInput = document.getElementById('taskInput');
+            const addTaskBtn = document.getElementById('addTaskBtn');
+            const taskList = document.getElementById('taskList');
+            let tasks = [
+                { id: 1, text: 'Estudiar los Hooks de React' },
+                { id: 2, text: 'Practicar con Tailwind CSS' }
+            ];
+            let nextId = 3;
+
+            function renderTasks() {
+                taskList.innerHTML = '';
+                if (tasks.length === 0) {
+                    taskList.innerHTML = '<p class="text-gray-500 text-sm">No hay tareas pendientes. ¡Añade una!</p>';
+                    return;
+                }
+                tasks.forEach(task => {
+                    const li = document.createElement('li');
+                    li.className = 'flex justify-between items-center bg-white p-2 rounded-md border';
+                    li.setAttribute('key', task.id);
+
+                    const span = document.createElement('span');
+                    span.textContent = task.text;
+                    li.appendChild(span);
+
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.textContent = 'Eliminar';
+                    deleteBtn.className = 'text-red-500 hover:text-red-700 text-sm font-semibold';
+                    deleteBtn.onclick = () => {
+                        tasks = tasks.filter(t => t.id !== task.id);
+                        renderTasks();
+                    };
+                    li.appendChild(deleteBtn);
+                    taskList.appendChild(li);
+                });
+            }
+
+            addTaskBtn.addEventListener('click', () => {
+                const text = taskInput.value.trim();
+                if (text) {
+                    tasks.push({ id: nextId++, text });
+                    taskInput.value = '';
+                    renderTasks();
+                }
+            });
+
+            renderTasks();
+
+            // useEffect
+            const fetchDataBtn = document.getElementById('fetchDataBtn');
+            const userDataContainer = document.getElementById('userDataContainer');
+
+            fetchDataBtn.addEventListener('click', () => {
+                userDataContainer.innerHTML = '<p class="text-gray-500">Cargando...</p>';
+
+                // Simulación de una llamada a API
+                setTimeout(() => {
+                    const user = { name: 'Alex Doe', email: 'alex.doe@example.com' };
+                    userDataContainer.innerHTML = `
+                    <div class="text-left">
+                        <p><strong>Nombre:</strong> ${user.name}</p>
+                        <p><strong>Email:</strong> ${user.email}</p>
+                    </div>
+                `;
+                }, 1500);
+            });
+
+            // Tabs para useEffect
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+
+                    tabContents.forEach(content => {
+                        content.classList.remove('active');
+                        if (content.id === button.dataset.tab) {
+                            content.classList.add('active');
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
