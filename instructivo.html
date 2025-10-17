@@ -41,12 +41,11 @@
                     <h3 class="font-bold text-lg mb-4">Pasos del Taller</h3>
                     <ul class="space-y-2">
                         <li><a href="#step-1" class="sidebar-link block px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 transition-colors">Paso 1: Base de Datos</a></li>
-                        <li><a href="#step-2" class="sidebar-link block px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 transition-colors">Paso 2: Referencias</a></li>
-                        <li><a href="#step-3" class="sidebar-link block px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 transition-colors">Paso 3: ProductCard</a></li>
-                        <li><a href="#step-4" class="sidebar-link block px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 transition-colors">Paso 4: CategoryPage</a></li>
-                        <li><a href="#step-5" class="sidebar-link block px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 transition-colors">Paso 5: App Principal</a></li>
-                        <li><a href="#step-6" class="sidebar-link block px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 transition-colors">Paso 6: Limpieza</a></li>
-                        <li><a href="#step-7" class="sidebar-link block px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 transition-colors">Paso 7: ¡A Probar!</a></li>
+                        <li><a href="#step-2" class="sidebar-link block px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 transition-colors">Paso 2: ProductCard</a></li>
+                        <li><a href="#step-3" class="sidebar-link block px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 transition-colors">Paso 3: CategoryPage</a></li>
+                        <li><a href="#step-4" class="sidebar-link block px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 transition-colors">Paso 4: App Principal</a></li>
+                        <li><a href="#step-5" class="sidebar-link block px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 transition-colors">Paso 5: Limpieza</a></li>
+                        <li><a href="#step-6" class="sidebar-link block px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 transition-colors">Paso 6: ¡A Probar!</a></li>
                     </ul>
                 </nav>
             </aside>
@@ -96,81 +95,7 @@ export const allProducts = [
 
                 <!-- Step 2 -->
                 <section id="step-2" class="bg-white rounded-lg shadow-md p-6 md:p-8 min-h-[200px]">
-                    <h2 class="text-2xl font-bold mb-4 text-blue-700">Paso 2: Archivos Originales (Para Referencia)</h2>
-                    <p class="mb-6 text-gray-600">Estos son los componentes que vamos a reemplazar. Es útil compararlos para ver la duplicación de código que estamos eliminando. No necesitas crear estos archivos, solo conocer su contenido original.</p>
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div>
-                            <h3 class="font-semibold mb-2">Código Original de <code class="bg-gray-200 px-2 py-1 rounded">WomenPage.jsx</code></h3>
-                            <div class="relative">
-                                <button class="copy-btn absolute top-4 right-4 bg-gray-600 hover:bg-gray-700 text-white font-semibold text-xs py-1 px-3 rounded-md transition-all">Copiar</button>
-                                <pre><code class="language-jsx">
-import React from 'react';
-import ProductCard from '../common/ProductCard.jsx';
-import FooterProduct from '../product/FooterProduct.jsx';
-import { allProducts } from '../../../data/products.js';
-
-const WomenPage = () => {
-    const womenProducts = allProducts.filter(product => product.category === 'Mujer');
-    return (
-        &lt;div className="animate-fade-in"&gt;
-            &lt;header className="bg-rose-50 py-12"&gt;
-                &lt;div className="container mx-auto px-4 text-center"&gt;
-                    &lt;h1 className="text-5xl font-black text-gray-800"&gt;Colección Mujer&lt;/h1&gt;
-                    &lt;p className="text-lg text-gray-600 mt-2"&gt;Estilo y elegancia para cada momento.&lt;/p&gt;
-                &lt;/div&gt;
-            &lt;/header&gt;
-            &lt;main className="container mx-auto px-4 my-12"&gt;
-                &lt;div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10"&gt;
-                    {womenProducts.map(product => ( &lt;ProductCard key={product.id} product={product} /&gt; ))}
-                &lt;/div&gt;
-            &lt;/main&gt;
-            &lt;FooterProduct /&gt;
-        &lt;/div&gt;
-    );
-};
-export default WomenPage;
-                                </code></pre>
-                            </div>
-                        </div>
-                        <div>
-                            <h3 class="font-semibold mb-2">Código Original de <code class="bg-gray-200 px-2 py-1 rounded">MenPage.jsx</code></h3>
-                            <div class="relative">
-                                <button class="copy-btn absolute top-4 right-4 bg-gray-600 hover:bg-gray-700 text-white font-semibold text-xs py-1 px-3 rounded-md transition-all">Copiar</button>
-                                <pre><code class="language-jsx">
-import React from 'react';
-import ProductCard from '../common/ProductCard.jsx';
-import FooterProduct from '../product/FooterProduct.jsx';
-import { allProducts } from '../../../data/products.js';
-
-const MenPage = () => {
-    const menProducts = allProducts.filter(product => product.category === 'Hombre');
-    return (
-        &lt;div className="animate-fade-in bg-gray-900 text-white"&gt;
-            &lt;header className="bg-black py-12"&gt;
-                &lt;div className="container mx-auto px-4 text-center"&gt;
-                    &lt;h1 className="text-5xl font-black text-white"&gt;Colección Hombre&lt;/h1&gt;
-                    &lt;p className="text-lg text-gray-400 mt-2"&gt;Diseño, calidad y carácter urbano.&lt;/p&gt;
-                &lt;/div&gt;
-            &lt;/header&gt;
-            &lt;main className="container mx-auto px-4 my-12"&gt;
-                &lt;div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10"&gt;
-                    {menProducts.map(product => ( &lt;ProductCard key={product.id} product={product} /&gt; ))}
-                &lt;/div&gt;
-            &lt;/main&gt;
-            &lt;FooterProduct /&gt;
-        &lt;/div&gt;
-    );
-};
-export default MenPage;
-                                </code></pre>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Step 3 -->
-                <section id="step-3" class="bg-white rounded-lg shadow-md p-6 md:p-8 min-h-[200px]">
-                    <h2 class="text-2xl font-bold mb-4 text-blue-700">Paso 3: Actualizar la Tarjeta de Producto</h2>
+                    <h2 class="text-2xl font-bold mb-4 text-blue-700">Paso 2: Actualizar la Tarjeta de Producto</h2>
                      <div class="bg-gray-100 p-4 rounded-lg mb-4 text-sm">
                         <p><strong class="font-semibold">Archivo a modificar:</strong> <code class="bg-gray-200 px-2 py-1 rounded">src/assets/components/common/ProductCard.jsx</code></p>
                         <p><strong class="font-semibold">Acción:</strong> Reemplazar todo el contenido del archivo.</p>
@@ -209,9 +134,9 @@ export default ProductCard;
                     </div>
                 </section>
                 
-                <!-- Step 4 -->
-                <section id="step-4" class="bg-white rounded-lg shadow-md p-6 md:p-8 min-h-[200px]">
-                    <h2 class="text-2xl font-bold mb-4 text-blue-700">Paso 4: Crear la Nueva Página de Categoría</h2>
+                <!-- Step 3 -->
+                <section id="step-3" class="bg-white rounded-lg shadow-md p-6 md:p-8 min-h-[200px]">
+                    <h2 class="text-2xl font-bold mb-4 text-blue-700">Paso 3: Crear la Nueva Página de Categoría</h2>
                      <div class="bg-gray-100 p-4 rounded-lg mb-4 text-sm">
                         <p><strong class="font-semibold">Archivo a crear:</strong> <code class="bg-gray-200 px-2 py-1 rounded">src/assets/components/pages/CategoryPage.jsx</code></p>
                         <p><strong class="font-semibold">Acción:</strong> Crear un nuevo archivo con este nombre y en esa ruta.</p>
@@ -314,9 +239,9 @@ export default CategoryPage;
                     </div>
                 </section>
 
-                <!-- Step 5 -->
-                <section id="step-5" class="bg-white rounded-lg shadow-md p-6 md:p-8 min-h-[200px]">
-                    <h2 class="text-2xl font-bold mb-4 text-blue-700">Paso 5: Actualizar el Componente Principal `App.jsx` (Versión Corregida)</h2>
+                <!-- Step 4 -->
+                <section id="step-4" class="bg-white rounded-lg shadow-md p-6 md:p-8 min-h-[200px]">
+                    <h2 class="text-2xl font-bold mb-4 text-blue-700">Paso 4: Actualizar el Componente Principal `App.jsx` (Versión Corregida)</h2>
                      <div class="bg-gray-100 p-4 rounded-lg mb-4 text-sm">
                         <p><strong class="font-semibold">Archivo a modificar:</strong> <code class="bg-gray-200 px-2 py-1 rounded">src/App.jsx</code></p>
                         <p><strong class="font-semibold">Acción:</strong> Reemplazar todo el contenido del archivo con esta versión final.</p>
@@ -379,9 +304,9 @@ export default App;
                     </div>
                 </section>
                 
-                 <!-- Step 6 -->
-                <section id="step-6" class="bg-white rounded-lg shadow-md p-6 md:p-8 min-h-[200px]">
-                    <h2 class="text-2xl font-bold mb-4 text-blue-700">Paso 6: Limpieza del Proyecto (¡El paso clave!)</h2>
+                 <!-- Step 5 -->
+                <section id="step-5" class="bg-white rounded-lg shadow-md p-6 md:p-8 min-h-[200px]">
+                    <h2 class="text-2xl font-bold mb-4 text-blue-700">Paso 5: Limpieza del Proyecto (¡El paso clave!)</h2>
                     <p class="mb-4 text-gray-600">Ahora que <code class="bg-gray-200 px-2 py-1 rounded">CategoryPage.jsx</code> hace todo el trabajo, vamos a eliminar los archivos que se han vuelto innecesarios para mantener nuestro código limpio y ordenado.</p>
                      <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg">
                         <p class="font-bold">Acción: Eliminar los siguientes dos archivos de la carpeta <code class="bg-red-200 px-1">src/assets/components/pages/</code>:</p>
@@ -392,9 +317,9 @@ export default App;
                     </div>
                 </section>
                 
-                 <!-- Step 7 -->
-                <section id="step-7" class="bg-white rounded-lg shadow-md p-6 md:p-8 min-h-[200px]">
-                    <h2 class="text-2xl font-bold mb-4 text-blue-700">Paso 7: ¡A Probar!</h2>
+                 <!-- Step 6 -->
+                <section id="step-6" class="bg-white rounded-lg shadow-md p-6 md:p-8 min-h-[200px]">
+                    <h2 class="text-2xl font-bold mb-4 text-blue-700">Paso 6: ¡A Probar!</h2>
                     <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-lg">
                         <p class="font-bold">¡Excelente trabajo!</p>
                         <p>Guarda todos los cambios, ejecuta tu aplicación y comprueba que todo funcione como se espera. Las secciones "Hombre" y "Mujer" ahora deben tener filtros funcionales y controles de paginación.</p>
