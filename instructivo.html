@@ -31,7 +31,7 @@
     <div class="container mx-auto p-4 md:p-8">
         <header class="text-center mb-12">
             <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900">Guía Interactiva de Refactorización</h1>
-            <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">Sigue estos pasos para refactorizar la aplicación, reemplazando componentes duplicados por uno reutilizable con filtros y paginación.</p>
+            <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">Sigue estos pasos para construir y refactorizar la aplicación, usando rutas relativas para máxima compatibilidad.</p>
         </header>
 
         <div class="flex flex-col md:flex-row gap-8">
@@ -41,11 +41,14 @@
                     <h3 class="font-bold text-lg mb-4">Pasos del Taller</h3>
                     <ul class="space-y-2">
                         <li><a href="#step-1" class="sidebar-link block px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 transition-colors">Paso 1: Base de Datos</a></li>
-                        <li><a href="#step-2" class="sidebar-link block px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 transition-colors">Paso 2: ProductCard</a></li>
-                        <li><a href="#step-3" class="sidebar-link block px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 transition-colors">Paso 3: CategoryPage</a></li>
-                        <li><a href="#step-4" class="sidebar-link block px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 transition-colors">Paso 4: App Principal</a></li>
-                        <li><a href="#step-5" class="sidebar-link block px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 transition-colors">Paso 5: Limpieza</a></li>
-                        <li><a href="#step-6" class="sidebar-link block px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 transition-colors">Paso 6: ¡A Probar!</a></li>
+                        <li><a href="#step-2" class="sidebar-link block px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 transition-colors">Paso 2: Iconos</a></li>
+                        <li><a href="#step-3" class="sidebar-link block px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 transition-colors">Paso 3: NavLink</a></li>
+                        <li><a href="#step-4" class="sidebar-link block px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 transition-colors">Paso 4: Header</a></li>
+                        <li><a href="#step-5" class="sidebar-link block px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 transition-colors">Paso 5: ProductCard</a></li>
+                        <li><a href="#step-6" class="sidebar-link block px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 transition-colors">Paso 6: CategoryPage</a></li>
+                        <li><a href="#step-7" class="sidebar-link block px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 transition-colors">Paso 7: App Principal</a></li>
+                        <li><a href="#step-8" class="sidebar-link block px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 transition-colors">Paso 8: Limpieza</a></li>
+                        <li><a href="#step-9" class="sidebar-link block px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 transition-colors">Paso 9: ¡A Probar!</a></li>
                     </ul>
                 </nav>
             </aside>
@@ -92,10 +95,128 @@ export const allProducts = [
                         </code></pre>
                     </div>
                 </section>
-
+                
                 <!-- Step 2 -->
                 <section id="step-2" class="bg-white rounded-lg shadow-md p-6 md:p-8 min-h-[200px]">
-                    <h2 class="text-2xl font-bold mb-4 text-blue-700">Paso 2: Actualizar la Tarjeta de Producto</h2>
+                    <h2 class="text-2xl font-bold mb-4 text-blue-700">Paso 2: Crear Componentes de Iconos</h2>
+                     <div class="bg-gray-100 p-4 rounded-lg mb-4 text-sm">
+                        <p><strong class="font-semibold">Acción:</strong> Crear los siguientes 3 archivos en la carpeta <code class="bg-gray-200 px-2 py-1 rounded">src/assets/components/icons/</code>.</p>
+                        <p>Estos son componentes simples que usan HTML y Tailwind para renderizar los iconos.</p>
+                    </div>
+                    <div class="space-y-4">
+                        <div>
+                            <p class="font-semibold mb-2"><code class="bg-gray-200 px-2 py-1 rounded">MenuIcons.jsx</code></p>
+                            <div class="relative"><button class="copy-btn absolute top-4 right-4 bg-gray-600 hover:bg-gray-700 text-white font-semibold text-xs py-1 px-3 rounded-md transition-all">Copiar</button><pre><code class="language-jsx">export default () => (&lt;svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"&gt;&lt;path d="M4 6H20M4 12H20M4 18H20" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/&gt;&lt;/svg&gt;);</code></pre></div>
+                        </div>
+                        <div>
+                            <p class="font-semibold mb-2"><code class="bg-gray-200 px-2 py-1 rounded">CartIcon.jsx</code></p>
+                            <div class="relative"><button class="copy-btn absolute top-4 right-4 bg-gray-600 hover:bg-gray-700 text-white font-semibold text-xs py-1 px-3 rounded-md transition-all">Copiar</button><pre><code class="language-jsx">export default () => (&lt;svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"&gt;&lt;path d="M9 21C9.55228 21 10 20.5523 10 20C10 19.4477 9.55228 19 9 19C8.44772 19 8 19.4477 8 20C8 20.5523 8.44772 21 9 21Z" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/&gt;&lt;path d="M20 21C20.5523 21 21 20.5523 21 20C21 19.4477 20.5523 19 20 19C19.4477 19 19 19.4477 19 20C19 20.5523 19.4477 21 20 21Z" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/&gt;&lt;path d="M1 1H5L7.68 14.39C7.77144 14.8504 8.02191 15.264 8.38755 15.5583C8.75318 15.8526 9.2107 16.009 9.68 16H19.4C19.8693 16.009 20.3268 15.8526 20.6925 15.5583C21.0581 15.264 21.3086 14.8504 21.4 14.39L23 6H6" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/&gt;&lt;/svg&gt;);</code></pre></div>
+                        </div>
+                        <div>
+                            <p class="font-semibold mb-2"><code class="bg-gray-200 px-2 py-1 rounded">CloseIcon.jsx</code></p>
+                            <div class="relative"><button class="copy-btn absolute top-4 right-4 bg-gray-600 hover:bg-gray-700 text-white font-semibold text-xs py-1 px-3 rounded-md transition-all">Copiar</button><pre><code class="language-jsx">export default () => (&lt;svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"&gt;&lt;path d="M18 6L6 18" stroke="#1F2937" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/&gt;&lt;path d="M6 6L18 18" stroke="#1F2937" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/&gt;&lt;/svg&gt;);</code></pre></div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Step 3 -->
+                <section id="step-3" class="bg-white rounded-lg shadow-md p-6 md:p-8 min-h-[200px]">
+                    <h2 class="text-2xl font-bold mb-4 text-blue-700">Paso 3: Crear Componente de Navegación</h2>
+                     <div class="bg-gray-100 p-4 rounded-lg mb-4 text-sm">
+                        <p><strong class="font-semibold">Archivo a crear:</strong> <code class="bg-gray-200 px-2 py-1 rounded">src/assets/components/header/NavLinkHeader.jsx</code></p>
+                        <p><strong class="font-semibold">Acción:</strong> Crear un nuevo archivo en esta ruta.</p>
+                    </div>
+                    <div class="relative">
+                        <button class="copy-btn absolute top-4 right-4 bg-gray-600 hover:bg-gray-700 text-white font-semibold text-xs py-1 px-3 rounded-md transition-all">Copiar</button>
+                        <pre><code class="language-jsx">
+import React from 'react';
+
+export default ({ text, onClick }) => {
+    const handleClick = (e) => {
+        e.preventDefault();
+        if (onClick) {
+            onClick();
+        }
+    };
+
+    return (
+        &lt;a href="#" onClick={handleClick} className="relative py-10 group"&gt;
+            &lt;span className="group-hover:text-orange-400 transition-all duration-300"&gt;{text}&lt;/span&gt;
+            &lt;span className="absolute bottom-0 left-0 block h-1 w-full scale-x-0 group-hover:scale-x-100 group-hover:bg-orange-400 transition-all duration-300"&gt;&lt;/span&gt;
+        &lt;/a&gt;
+    );
+};
+                        </code></pre>
+                    </div>
+                </section>
+                
+                <!-- Step 4 -->
+                <section id="step-4" class="bg-white rounded-lg shadow-md p-6 md:p-8 min-h-[200px]">
+                    <h2 class="text-2xl font-bold mb-4 text-blue-700">Paso 4: Crear Componente del Encabezado</h2>
+                     <div class="bg-gray-100 p-4 rounded-lg mb-4 text-sm">
+                        <p><strong class="font-semibold">Archivo a crear:</strong> <code class="bg-gray-200 px-2 py-1 rounded">src/assets/components/header/MainHeader.jsx</code></p>
+                        <p><strong class="font-semibold">Acción:</strong> Crear un nuevo archivo en esta ruta. Fíjate cómo todas las rutas son relativas.</p>
+                    </div>
+                    <div class="relative">
+                        <button class="copy-btn absolute top-4 right-4 bg-gray-600 hover:bg-gray-700 text-white font-semibold text-xs py-1 px-3 rounded-md transition-all">Copiar</button>
+                        <pre><code class="language-jsx">
+import React, { useState } from 'react';
+import AvatarImage from '../../images/image-avatar.png';
+import MenuIcon from '../icons/MenuIcons.jsx';
+import CartIcon from '../icons/CartIcon.jsx';
+import CloseIcon from '../icons/CloseIcon.jsx';
+import NavLinkHeader from './NavLinkHeader.jsx';
+
+const MainHeader = ({ navigateTo }) => {
+    const COMPANY_NAME = "shoreline";
+    const [navClass, setnavClass] = useState("hidden font-bold md:mr-auto md:gap-4 md:flex md:flex-row top-0 left-0 p-8 md:static md:p-0 md:h-auto");
+
+    const handleOpenMenu = () => {
+        setnavClass("absolute w-4/5 font-bold flex flex-col md:mr-auto md:gap-4 md:flex md:flex-row top-0 left-0 bg-white h-full p-8 gap-y-[21px] md:static md:p-0 md:h-auto z-10");
+    };
+
+    const handleClosedMenu = () => {
+        setnavClass("hidden font-bold md:mr-auto md:gap-4 md:flex md:flex-row top-0 left-0 p-8 md:static md:p-0 md:h-auto");
+    };
+
+    return (
+        &lt;&gt;
+            &lt;header className='container mx-auto flex items-center px-4 gap-8 bg-white'&gt;
+                &lt;button className='md:hidden' onClick={handleOpenMenu}&gt;
+                    &lt;MenuIcon /&gt;
+                &lt;/button&gt;
+                &lt;div onClick={() => navigateTo('home')} className='mr-auto md:mr-0 font-black text-3xl text-gray-900 tracking-wider cursor-pointer'&gt;
+                    {COMPANY_NAME}
+                &lt;/div&gt;
+                &lt;nav className={navClass}&gt;
+                    &lt;button className='mb-12 md:hidden' onClick={handleClosedMenu}&gt;
+                        &lt;CloseIcon /&gt;
+                    &lt;/button&gt;
+                    &lt;NavLinkHeader text="Hombre" onClick={() => navigateTo('men')} /&gt;
+                    &lt;NavLinkHeader text="Mujer" onClick={() => navigateTo('women')} /&gt;
+                    &lt;NavLinkHeader text="Oferta" onClick={() => navigateTo('sale')} /&gt;
+                    &lt;NavLinkHeader text="Acerca de" onClick={() => navigateTo('about')} /&gt;
+                &lt;/nav&gt;
+                &lt;div className='flex gap-4'&gt;
+                    &lt;button&gt;
+                        &lt;CartIcon /&gt;
+                    &lt;/button&gt;
+                    &lt;img src={AvatarImage} alt="" className='w-10' /&gt;
+                &lt;/div&gt;
+            &lt;/header&gt;
+            &lt;span className="container mx-auto hidden md:block h-[0.2px] w-full bg-gray-500"&gt;&lt;/span&gt;
+        &lt;/&gt;
+    );
+};
+
+export default MainHeader;
+                        </code></pre>
+                    </div>
+                </section>
+
+                <!-- Step 5 -->
+                <section id="step-5" class="bg-white rounded-lg shadow-md p-6 md:p-8 min-h-[200px]">
+                    <h2 class="text-2xl font-bold mb-4 text-blue-700">Paso 5: Actualizar la Tarjeta de Producto</h2>
                      <div class="bg-gray-100 p-4 rounded-lg mb-4 text-sm">
                         <p><strong class="font-semibold">Archivo a modificar:</strong> <code class="bg-gray-200 px-2 py-1 rounded">src/assets/components/common/ProductCard.jsx</code></p>
                         <p><strong class="font-semibold">Acción:</strong> Reemplazar todo el contenido del archivo.</p>
@@ -134,9 +255,9 @@ export default ProductCard;
                     </div>
                 </section>
                 
-                <!-- Step 3 -->
-                <section id="step-3" class="bg-white rounded-lg shadow-md p-6 md:p-8 min-h-[200px]">
-                    <h2 class="text-2xl font-bold mb-4 text-blue-700">Paso 3: Crear la Nueva Página de Categoría</h2>
+                <!-- Step 6 -->
+                <section id="step-6" class="bg-white rounded-lg shadow-md p-6 md:p-8 min-h-[200px]">
+                    <h2 class="text-2xl font-bold mb-4 text-blue-700">Paso 6: Crear la Nueva Página de Categoría</h2>
                      <div class="bg-gray-100 p-4 rounded-lg mb-4 text-sm">
                         <p><strong class="font-semibold">Archivo a crear:</strong> <code class="bg-gray-200 px-2 py-1 rounded">src/assets/components/pages/CategoryPage.jsx</code></p>
                         <p><strong class="font-semibold">Acción:</strong> Crear un nuevo archivo con este nombre y en esa ruta.</p>
@@ -239,9 +360,9 @@ export default CategoryPage;
                     </div>
                 </section>
 
-                <!-- Step 4 -->
-                <section id="step-4" class="bg-white rounded-lg shadow-md p-6 md:p-8 min-h-[200px]">
-                    <h2 class="text-2xl font-bold mb-4 text-blue-700">Paso 4: Actualizar el Componente Principal `App.jsx` (Versión Corregida)</h2>
+                <!-- Step 7 -->
+                <section id="step-7" class="bg-white rounded-lg shadow-md p-6 md:p-8 min-h-[200px]">
+                    <h2 class="text-2xl font-bold mb-4 text-blue-700">Paso 7: Actualizar el Componente Principal `App.jsx` (Versión Corregida)</h2>
                      <div class="bg-gray-100 p-4 rounded-lg mb-4 text-sm">
                         <p><strong class="font-semibold">Archivo a modificar:</strong> <code class="bg-gray-200 px-2 py-1 rounded">src/App.jsx</code></p>
                         <p><strong class="font-semibold">Acción:</strong> Reemplazar todo el contenido del archivo con esta versión final.</p>
@@ -304,9 +425,9 @@ export default App;
                     </div>
                 </section>
                 
-                 <!-- Step 5 -->
-                <section id="step-5" class="bg-white rounded-lg shadow-md p-6 md:p-8 min-h-[200px]">
-                    <h2 class="text-2xl font-bold mb-4 text-blue-700">Paso 5: Limpieza del Proyecto (¡El paso clave!)</h2>
+                 <!-- Step 8 -->
+                <section id="step-8" class="bg-white rounded-lg shadow-md p-6 md:p-8 min-h-[200px]">
+                    <h2 class="text-2xl font-bold mb-4 text-blue-700">Paso 8: Limpieza del Proyecto (¡El paso clave!)</h2>
                     <p class="mb-4 text-gray-600">Ahora que <code class="bg-gray-200 px-2 py-1 rounded">CategoryPage.jsx</code> hace todo el trabajo, vamos a eliminar los archivos que se han vuelto innecesarios para mantener nuestro código limpio y ordenado.</p>
                      <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg">
                         <p class="font-bold">Acción: Eliminar los siguientes dos archivos de la carpeta <code class="bg-red-200 px-1">src/assets/components/pages/</code>:</p>
@@ -317,9 +438,9 @@ export default App;
                     </div>
                 </section>
                 
-                 <!-- Step 6 -->
-                <section id="step-6" class="bg-white rounded-lg shadow-md p-6 md:p-8 min-h-[200px]">
-                    <h2 class="text-2xl font-bold mb-4 text-blue-700">Paso 6: ¡A Probar!</h2>
+                 <!-- Step 9 -->
+                <section id="step-9" class="bg-white rounded-lg shadow-md p-6 md:p-8 min-h-[200px]">
+                    <h2 class="text-2xl font-bold mb-4 text-blue-700">Paso 9: ¡A Probar!</h2>
                     <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-lg">
                         <p class="font-bold">¡Excelente trabajo!</p>
                         <p>Guarda todos los cambios, ejecuta tu aplicación y comprueba que todo funcione como se espera. Las secciones "Hombre" y "Mujer" ahora deben tener filtros funcionales y controles de paginación.</p>
