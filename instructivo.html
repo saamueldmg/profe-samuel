@@ -316,29 +316,32 @@ export default CategoryPage;
 
                 <!-- Step 5 -->
                 <section id="step-5" class="bg-white rounded-lg shadow-md p-6 md:p-8 min-h-[200px]">
-                    <h2 class="text-2xl font-bold mb-4 text-blue-700">Paso 5: Actualizar el Componente Principal `App.jsx`</h2>
+                    <h2 class="text-2xl font-bold mb-4 text-blue-700">Paso 5: Actualizar el Componente Principal `App.jsx` (Versión Corregida)</h2>
                      <div class="bg-gray-100 p-4 rounded-lg mb-4 text-sm">
                         <p><strong class="font-semibold">Archivo a modificar:</strong> <code class="bg-gray-200 px-2 py-1 rounded">src/App.jsx</code></p>
-                        <p><strong class="font-semibold">Acción:</strong> Reemplazar todo el contenido del archivo.</p>
+                        <p><strong class="font-semibold">Acción:</strong> Reemplazar todo el contenido del archivo con esta versión final.</p>
                     </div>
                     <div class="relative">
                         <button class="copy-btn absolute top-4 right-4 bg-gray-600 hover:bg-gray-700 text-white font-semibold text-xs py-1 px-3 rounded-md transition-all">Copiar</button>
                         <pre><code class="language-jsx">
 import React, { useState } from 'react';
 
+// --- IMPORTACIONES CLAVE ---
+// 1. Ya NO importamos MenPage ni WomenPage.
+// 2. SÍ importamos el nuevo CategoryPage.
 import MainHeader from './assets/components/header/MainHeader.jsx';
 import MainProduct from './assets/components/product/MainProduct.jsx';
 import PromocionBanner from './assets/components/product/PromocionBanner.jsx';
 import FeaturedProducts from './assets/components/product/FeaturedProducts.jsx';
 import FooterProduct from './assets/components/product/FooterProduct.jsx';
-import CategoryPage from './assets/components/pages/CategoryPage.jsx';
+import CategoryPage from './assets/components/pages/CategoryPage.jsx'; // La nueva página
 
 const HomePage = () => (
     &lt;&gt;
         &lt;MainProduct /&gt;
         &lt;PromocionBanner /&gt;
         &lt;FeaturedProducts /&gt;
-        &lt;FooterProduct /&gt;
+        &lt;FooterProduct /&gt; 
     &lt;/&gt;
 );
 
@@ -350,6 +353,9 @@ const App = () => {
     };
 
     const renderPage = () => {
+        // --- LÓGICA CLAVE ---
+        // Ahora usamos CategoryPage para 'women' y 'men',
+        // pasándole las props 'title' y 'category' para que sepa qué mostrar.
         switch (currentPage) {
             case 'women':
                 return &lt;CategoryPage title="Colección Mujer" category="Mujer" /&gt;;
@@ -363,7 +369,7 @@ const App = () => {
     return (
         &lt;div&gt;
             &lt;MainHeader navigateTo={navigateTo} /&gt;
-            &lt;{renderPage()}&gt;
+            {renderPage()}
         &lt;/div&gt;
     );
 };
@@ -451,3 +457,4 @@ export default App;
     </script>
 </body>
 </html>
+
