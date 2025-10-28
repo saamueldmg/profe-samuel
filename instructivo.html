@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kit de Aprendizaje v7: Inicio de Sesión</title>
+    <title>Kit v7.1: Sesión Persistente y Fotos</title>
     
-    <!-- 1. Tailwind CSS para los estilos de la página -->
+    <!-- 1. Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- 2. Highlight.js para el resaltado de código -->
@@ -16,148 +16,733 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/jsx.min.js"></script>
 
     <style>
-        /* Estilos personalizados leves */
+        /* Fuente Inter */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
+        
         body {
-            @apply bg-gray-50 text-gray-800 leading-relaxed;
+            font-family: 'Inter', sans-serif;
+            @apply bg-slate-50 text-slate-800 leading-relaxed;
         }
         h1 {
-            @apply text-4xl font-bold text-gray-900 mb-4 tracking-tight;
+            @apply text-4xl font-extrabold text-white tracking-tight;
         }
         h2 {
-            @apply text-2xl font-bold text-indigo-700 mb-5 pb-2 border-b border-indigo-200;
+            @apply text-3xl font-bold text-slate-800 mb-6 pb-3 border-b border-slate-200 flex items-center;
         }
         p {
-            @apply mb-4 text-lg;
+            @apply mb-5 text-lg text-slate-600;
         }
+        /* Estilo para los bloques de código */
         pre {
-            @apply bg-gray-800 text-white p-4 rounded-lg shadow-md overflow-x-auto;
+            @apply bg-slate-800 text-white p-5 rounded-lg shadow-lg overflow-x-auto relative;
         }
-        code {
-            @apply font-mono;
+        code.hljs {
+            @apply !bg-transparent !p-0;
+        }
+        
+        /* Cajas de información */
+        .info-box {
+            @apply p-4 rounded-lg my-5 text-base flex items-start gap-3;
         }
         .location-box {
-            @apply bg-blue-50 border-l-4 border-blue-500 text-blue-800 p-4 rounded-md my-4 font-mono text-sm;
+            @apply bg-blue-50 border-l-4 border-blue-500 text-blue-800;
         }
         .action-box {
-            @apply bg-yellow-50 border-l-4 border-yellow-500 text-yellow-800 p-4 rounded-md my-4 text-base;
+            @apply bg-yellow-50 border-l-4 border-yellow-500 text-yellow-800;
         }
+        .warning-box {
+            @apply bg-red-100 border-l-4 border-red-600 text-red-900;
+        }
+        .info-box code {
+            @apply bg-yellow-100 text-yellow-900 px-1.5 py-0.5 rounded-md font-semibold;
+        }
+        .warning-box code {
+            @apply bg-red-200 text-red-900 px-1.5 py-0.5 rounded-md font-semibold;
+        }
+        .location-box code {
+            @apply bg-blue-100 text-blue-900 px-1.5 py-0.5 rounded-md font-semibold;
+        }
+
+        /* Botón de copiar */
+        .copy-btn {
+            @apply absolute top-3 right-3 bg-slate-600 text-slate-200 text-xs font-semibold py-1.5 px-3 rounded-md transition-all duration-200;
+        }
+        .copy-btn:hover {
+            @apply bg-slate-500;
+        }
+        .copy-btn.copied {
+            @apply bg-emerald-500 text-white;
+        }
+
+        /* Animaciones (usadas en los modales) */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .animate-fadeIn { animation: fadeIn 0.3s ease-out; }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-slideUp { animation: slideUp 0.3s ease-out; }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        .animate-shake { animation: shake 0.3s ease-in-out; }
     </style>
 </head>
-<body class="font-sans">
+<body>
 
-    <div class="container mx-auto max-w-4xl p-6 md:p-12">
-        <header class="text-center mb-12">
-            <h1 class="text-4xl md:text-5xl font-extrabold text-indigo-800">Kit de Aprendizaje v7</h1>
-            <p class="text-2xl text-gray-600 mt-2">¡Implementando Inicio de Sesión con Modal!</p>
-        </header>
+    <!-- Header de la Guía -->
+    <header class="bg-gradient-to-r from-purple-600 via-indigo-700 to-indigo-800 text-white p-10 shadow-lg">
+        <div class="container mx-auto max-w-5xl text-center">
+            <h1 class="text-4xl md:text-5xl">Mapa de procesos!</h1>
+            <p class="text-2xl text-indigo-100 mt-2">Inicio sesión y carrito de compras</p>
+        </div>
+    </header>
 
-        <article>
-            <p class="text-xl text-center mb-10">¡Hola, equipo! Vamos a añadir una funcionalidad esencial a nuestra tienda: el inicio de sesión. Lo haremos de una forma moderna y amigable, usando un modal (ventana emergente) en lugar de una página separada. ¡Prepárense para conectar usuarios!</p>
+    <main class="container mx-auto max-w-5xl p-4 md:p-8">
+    
+        <p class="text-xl text-center mb-8">¡Hola, equipo! Vamos a llevar nuestro inicio de sesión al siguiente nivel. 
+            En esta actualización, haremos que la sesión persista (¡no se cerrará al recargar!) 
+            y permitiremos a los usuarios subir su propia foto de perfil. ¡Vamos a ello!</p>
 
-            <!-- Paso 1 -->
-            <section class="mb-12 bg-white p-8 rounded-lg shadow-lg">
-                <h2>Paso 1: Preparando la Base de Datos de Usuarios (user.js)</h2>
-                <p>Necesitamos tener una lista de usuarios "registrados" para probar nuestro login. Estos son datos de prueba. Fíjate en los campos <code>username</code>, <code>password</code> y <code>name</code>.</p>
-                <div class="action-box">
-                    <strong>Acción:</strong> Asegúrate de tener la carpeta <code>data</code> dentro de <code>src</code>. Dentro de <code>data</code>, crea o verifica el archivo <code>user.js</code> con este contenido.
-                </div>
-                <div class="location-box">
-                    <strong>Ubicación:</strong> <code>src/data/user.js</code>
-                </div>
-<pre><code class="language-javascript">
-// src/data/user.js
+        <!-- =========== ADVERTENCIA CRÍTICA =========== -->
+        <section class="warning-box text-lg mb-10" role="alert">
+            <svg class="w-10 h-10 min-w-[2.5rem] text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <div>
+                <h3 class="font-extrabold text-xl mb-2">¡OJO! ¡GUARDA TU CÓDIGO!</h3>
+                <p class="!mb-0">Antes de reemplazar <code>MainHeader.jsx</code> (Paso 5), <strong>guarda una copia de tu archivo actual</strong>. El código nuevo (del profe) tiene sus propios enlaces de navegación (<code>Hombre</code>, <code>Mujer</code>, <code>Acerca de</code>). Si tenías enlaces diferentes, ¡los perderás! Deberás copiarlos de tu archivo guardado y pegarlos en el nuevo <code>MainHeader.jsx</code>.</p>
+            </div>
+        </section>
+
+        <!-- =========== PASOS =========== -->
+
+        <!-- Paso 1: user.js -->
+        <article class="bg-white p-6 md:p-8 rounded-lg shadow-xl mb-10">
+            <h2><span class="text-indigo-500 mr-3 text-4xl font-black">1</span> Actualizar Base de Datos de Usuarios</h2>
+            <p>Primero, actualicemos la lista de usuarios. Hemos cambiado los datos del "profe" para este ejemplo.</p>
+            
+            <div class="action-box">
+                <strong>Acción:</strong> Copia esta Bases de Datos pero puedes reemplazar los valores recuerda que username es el que necesitas 
+                y password para iniciar sesión, y el nombre es que aparecerá en el MainHeader. <code>user.js</code> con este código.
+            </div>
+            <div class="location-box">
+                <strong>Ubicación:</strong> <code>src/data/user.js</code>
+            </div>
+<pre>
+<button class="copy-btn">Copiar</button>
+<code class="language-javascript">
 export const users = [
     { id: 1, username: 'estudiante1', password: 'password123', name: 'Ana García' },
-    { id: 2, username: 'profe', password: 'password456', name: 'Carlos Profe' },
+    { id: 2, username: 'profe', password: 'profe24', name: 'Samuel Profe' },
     { id: 3, username: 'maria', password: 'password789', name: 'María López' },
     { id: 4, username: 'david', password: 'password101', name: 'David Gómez' },
     { id: 5, username: 'sofia', password: 'password112', name: 'Sofía Rodríguez' },
 ];
-// ¡Recuerden! Guardar contraseñas así es solo para probar, ¡nunca en una app real!
 </code></pre>
-            </section>
+        </article>
 
-            <!-- Paso 2 -->
-            <section class="mb-12 bg-white p-8 rounded-lg shadow-lg">
-                <h2>Paso 2: Creando el Formulario Emergente (LoginModal.jsx)</h2>
-                <p>Este nuevo componente será nuestra ventana de inicio de sesión. Será una ventana "modal" que aparece sobre el contenido.</p>
-                <div class="action-box">
-                    <strong>Acción:</strong> Crea una carpeta <code>modals</code> dentro de <code>src/assets/components/</code>. Dentro de <code>modals</code>, crea el archivo <code>LoginModal.jsx</code> y pega el siguiente código.
-                </div>
-                <div class="location-box">
-                    <strong>Ubicación:</strong> <code>src/assets/components/modals/LoginModal.jsx</code>
-                </div>
-<pre><code class="language-jsx">
-// src/assets/components/modals/LoginModal.jsx
+        <!-- Paso 2: NavLinkHeader.jsx -->
+        <article class="bg-white p-6 md:p-8 rounded-lg shadow-xl mb-10">
+            <h2><span class="text-indigo-500 mr-3 text-4xl font-black">2</span> Ajustar NavLinkHeader.jsx</h2>
+            <p>Un pequeño ajuste de estilos en el <code>NavLinkHeader</code> para que la línea de "hover" se alinee correctamente con el nuevo header "sticky".</p>
+            
+            <div class="action-box">
+                <strong>Acción:</strong> Reemplaza el contenido de <code>NavLinkHeader.jsx</code>.
+            </div>
+            <div class="location-box">
+                <strong>Ubicación:</strong> <code>src/assets/components/header/NavLinkHeader.jsx</code>
+            </div>
+<pre>
+<button class="copy-btn">Copiar</button>
+<code class="language-jsx">
+import React from 'react';
+
+export default ({ text, onClick }) => {
+    const handleClick = (e) => {
+        e.preventDefault();
+        if (onClick) {
+            onClick();
+        }
+    };
+
+    return (
+        &lt;a href="#" onClick={handleClick} className="relative py-[1.69rem] group"&gt;
+            &lt;span className="group-hover:text-orange-400 transition-all duration-300"&gt;{text}&lt;/span&gt;
+            &lt;span className="absolute left-0 bottom-[-2px] block h-1 w-full scale-x-0 group-hover:scale-x-100 group-hover:bg-orange-400 transition-all duration-300"&gt;&lt;/span&gt;
+        &lt;/a&gt;
+    );
+};
+</code></pre>
+        </article>
+
+        <!-- Paso 3: LoginModal.jsx -->
+        <article class="bg-white p-6 md:p-8 rounded-lg shadow-xl mb-10">
+            <h2><span class="text-indigo-500 mr-3 text-4xl font-black">3</span> Crearemos LoginModal.jsx (Es lo que nos permite iniciar sesion)</h2>
+            <p>Vamos a copiar este código</p>
+            
+            <div class="action-box">
+                <strong>Acción:</strong> Copia este código en <code>LoginModal.jsx</code> anterior por este código.
+            </div>
+            <div class="location-box">
+                <strong>Ubicación:</strong> <code>src/assets/components/modals/LoginModal.jsx</code>
+            </div>
+<pre>
+    <br>
+<button class="copy-btn" style="color:burlywood;size: 25px;">COPIAR  <----- </button>
+<code class="language-jsx">
 import React, { useState } from 'react';
 
 const LoginModal = ({ onLogin, onClose }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
-        const loginSuccess = onLogin(username, password);
-        if (loginSuccess) {
-            onClose();
-        } else {
-            setError('Usuario o contraseña incorrectos.');
-        }
+        setIsLoading(true);
+        
+        // Simulamos una pequeña demora de red
+        setTimeout(() => {
+            const loginSuccess = onLogin(username, password);
+            if (loginSuccess) {
+                onClose();
+            } else {
+                setError('Usuario o contraseña incorrectos.');
+            }
+            setIsLoading(false);
+        }, 600);
     };
 
     return (
-        &lt;div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 animate-fade-in"&gt;
-            &lt;div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-sm"&gt;
-                &lt;h2 className="text-2xl font-bold mb-6 text-center text-gray-800"&gt;Iniciar Sesión&lt;/h2&gt;
-                &lt;form onSubmit={handleSubmit}&gt;
-                    {/* Campos de usuario y contraseña */}
-                    &lt;div className="mb-4"&gt;
-                        &lt;label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username"&gt;Usuario:&lt;/label&gt;
-                        &lt;input id="username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} required className="input-style shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-orange-500" placeholder="Tu nombre de usuario" /&gt;
-                    &lt;/div&gt;
+        &lt;div 
+            className="fixed inset-0 bg-gradient-to-br from-black/60 via-black/50 to-black/60 backdrop-blur-sm flex justify-center items-center z-50 animate-fadeIn px-4"
+            onClick={onClose}
+        &gt;
+            &lt;div 
+                className="bg-white rounded-2xl shadow-2xl w-full max-w-md transform transition-all duration-300 animate-slideUp"
+                onClick={(e) => e.stopPropagation()}
+            &gt;
+                {/* Header con gradiente */}
+                &lt;div className="bg-gradient-to-r from-orange-500 via-pink-500 to-purple-500 rounded-t-2xl p-6 relative overflow-hidden"&gt;
+                    &lt;div className="absolute inset-0 bg-black/10"&gt;&lt;/div&gt;
+                    
+                    {/* Botón X corregido */}
+                    &lt;button 
+                        type="button"
+                        onClick={onClose}
+                        className="absolute top-4 right-4 text-white/90 hover:text-white hover:bg-white/20 rounded-full p-1.5 transition-all duration-200 z-20 cursor-pointer"
+                    &gt;
+                        &lt;svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}&gt;
+                            &lt;path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /&gt;
+                        &lt;/svg&gt;
+                    &lt;/button&gt;
+                    
+                    &lt;h2 className="text-3xl font-bold text-white relative z-10 !border-none !pb-0 !mb-1"&gt;
+                        Bienvenido
+                    &lt;/h2&gt;
+                    &lt;p className="text-white/90 mt-1 relative z-10 !mb-0"&gt;Inicia sesión para continuar&lt;/p&gt;
+                &lt;/div&gt;
+
+                {/* Formulario */}
+                &lt;form onSubmit={handleSubmit} className="p-8"&gt;
+                    {/* Campo Usuario */}
                     &lt;div className="mb-6"&gt;
-                        &lt;label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password"&gt;Contraseña:&lt;/label&gt;
-                        &lt;input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required className="input-style shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:ring-2 focus:ring-orange-500" placeholder="Tu contraseña" /&gt;
+                        &lt;label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="username"&gt;
+                            Usuario
+                        &lt;/label&gt;
+                        &lt;div className="relative"&gt;
+                            &lt;div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"&gt;
+                                &lt;svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+                                    &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /&gt;
+                                &lt;/svg&gt;
+                            &lt;/div&gt;
+                            &lt;input 
+                                id="username" 
+                                type="text" 
+                                value={username} 
+                                onChange={(e) => setUsername(e.target.value)} 
+                                required 
+                                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 outline-none bg-gray-50 hover:bg-white"
+                                placeholder="tu_usuario"
+                            /&gt;
+                        &lt;/div&gt;
                     &lt;/div&gt;
-                    {error && &lt;p className="text-red-500 text-xs italic mb-4"&gt;{error}&lt;/p&gt;}
-                    &lt;div className="flex items-center justify-between"&gt;
-                        &lt;button type="submit" className="btn-primary bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300"&gt;Entrar&lt;/button&gt;
-                        &lt;button type="button" onClick={onClose} className="btn-secondary inline-block align-baseline font-bold text-sm text-gray-500 hover:text-gray-700"&gt;Cancelar&lt;/button&gt;
+
+                    {/* Campo Contraseña */}
+                    &lt;div className="mb-6"&gt;
+                        &lt;label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="password"&gt;
+                            Contraseña
+                        &lt;/label&gt;
+                        &lt;div className="relative"&gt;
+                            &lt;div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"&gt;
+                                &lt;svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+                                    &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /&gt;
+                                &lt;/svg&gt;
+                            &lt;/div&gt;
+                            &lt;input 
+                                id="password" 
+                                type={showPassword ? "text" : "password"}
+                                value={password} 
+                                onChange={(e) => setPassword(e.target.value)} 
+                                required 
+                                className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 outline-none bg-gray-50 hover:bg-white"
+                                placeholder="••••••••"
+                            /&gt;
+                            &lt;button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+                            &gt;
+                                {showPassword ? (
+                                    &lt;svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+                                        &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /&gt;
+                                    &lt;/svg&gt;
+                                ) : (
+                                    &lt;svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+                                        &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /&gt;
+                                        &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /&gt;
+                                    &lt;/svg&gt;
+                                )}
+                            &lt;/button&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+
+                    {/* Mensaje de Error */}
+                    {error && (
+                        &lt;div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-r-lg animate-shake"&gt;
+                            &lt;div className="flex items-center"&gt;
+                                &lt;svg className="h-5 w-5 text-red-500 mr-2" fill="currentColor" viewBox="0 0 20 20"&gt;
+                                    &lt;path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" /&gt;
+                                &lt;/svg&gt;
+                                &lt;p className="text-red-700 text-sm font-medium"&gt;{error}&lt;/p&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                    )}
+
+                    {/* Botones */}
+                    &lt;div className="flex flex-col gap-3"&gt;
+                        &lt;button 
+                            type="submit" 
+                            disabled={isLoading}
+                            className="w-full bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                        &gt;
+                            {isLoading ? (
+                                &lt;&gt;
+                                    &lt;svg className="animate-spin h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"&gt;
+                                        &lt;circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"&gt;&lt;/circle&gt;
+                                        &lt;path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"&gt;&lt;/path&gt;
+                                    &lt;/svg&gt;
+                                    Iniciando sesión...
+                                &lt;/&gt;
+                            ) : (
+                                &lt;&gt;
+                                    &lt;svg className="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+                                        &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" /&gt;
+                                    &lt;/svg&gt;
+                                    Iniciar Sesión
+                                &lt;/&gt;
+                            )}
+                        &lt;/button&gt;
+                        
+                        &lt;button 
+                            type="button" 
+                            onClick={onClose}
+                            className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-6 rounded-lg transition-all duration-200"
+                        &gt;
+                            Cancelar
+                        &lt;/button&gt;
+                    &lt;/div&gt;
+
+                    {/* Link adicional */}
+                    &lt;div className="mt-6 text-center"&gt;
+                        &lt;a href="#" className="text-sm text-gray-600 hover:text-orange-500 transition-colors duration-200 font-medium"&gt;
+                            ¿Olvidaste tu contraseña?
+                        &lt;/a&gt;
                     &lt;/div&gt;
                 &lt;/form&gt;
             &lt;/div&gt;
         &lt;/div&gt;
     );
 };
+
 export default LoginModal;
 </code></pre>
-            </section>
-
-            <!-- Paso 3 -->
-            <section class="mb-12 bg-white p-8 rounded-lg shadow-lg">
-                <h2>Paso 3: Conectando el Modal en App.jsx</h2>
-                <p><code>App.jsx</code> es el cerebro de la aplicación. Ahora necesita saber cuándo mostrar/ocultar el modal. También conectará la función <code>login</code> con el modal y la base de datos de usuarios.</p>
-                <div class="action-box">
-                    <strong>Acción:</strong> Reemplaza el contenido de <code>src/App.jsx</code> con este código. Fíjate en los nuevos estados <code>currentUser</code> y <code>isLoginModalOpen</code>, la importación de <code>users</code> y las funciones <code>login</code>, <code>logout</code>, <code>openLoginModal</code> y <code>closeLoginModal</code>.
-                </div>
-                <div class="location-box">
-                    <strong>Ubicación:</strong> <code>src/App.jsx</code>
-                </div>
-<pre><code class="language-jsx">
-// src/App.jsx
+        </article>
+        
+        <!-- Paso 4: ProfilePhotoModal.jsx -->
+        <article class="bg-white p-6 md:p-8 rounded-lg shadow-xl mb-10">
+            <h2><span class="text-indigo-500 mr-3 text-4xl font-black">4</span> Crear ProfilePhotoModal.jsx</h2>
+            <p>Este es un componente completamente nuevo. Se encargará de mostrar la foto de perfil, permitir al usuario seleccionar una nueva imagen, previsualizarla y guardarla (o eliminarla).</p>
+            
+            <div class="action-box">
+                <strong>Acción:</strong> ¡Este es un archivo nuevo! Créalo en la carpeta <code>modals</code>.
+            </div>
+            <div class="location-box">
+                <strong>Ubicación:</strong> <code>src/assets/components/modals/ProfilePhotoModal.jsx</code>
+            </div>
+<pre>
+<button class="copy-btn">Copiar</button>
+<code class="language-jsx">
+// src/assets/components/modals/ProfilePhotoModal.jsx
 import React, { useState } from 'react';
-// --- Asegúrate que estas rutas coincidan con tu estructura ---
+
+const ProfilePhotoModal = ({ currentUser, onUpdatePhoto, onClose }) => {
+    const [preview, setPreview] = useState(currentUser.profilePhoto || null);
+    const [selectedFile, setSelectedFile] = useState(null);
+
+    const handleFileSelect = (e) => {
+        const file = e.target.files[0];
+        if (file && file.type.startsWith('image/')) {
+            setSelectedFile(file);
+            // Crear preview usando URL.createObjectURL
+            const previewURL = URL.createObjectURL(file);
+            setPreview(previewURL);
+        }
+    };
+
+    const handleSave = () => {
+        if (preview) {
+            // Nota: En una app real, aquí subirías el 'selectedFile' a un servidor
+            // y obtendrías una URL. Para este kit, guardamos la URL de la *preview*
+            // (que es un 'blob:') en localStorage. Esto funcionará mientras la
+            // pestaña esté abierta, pero se romperá al cerrar el navegador.
+            // Para una persistencia real entre sesiones, necesitaríamos 
+            // leer el archivo como Base64, pero lo mantenemos simple.
+            
+            // *** Corrección para persistencia real con Base64 ***
+            // Leemos el archivo como DataURL (Base64) para guardarlo en localStorage
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const base64String = reader.result;
+                onUpdatePhoto(base64String); // Guardar Base64 en localStorage
+                onClose();
+            };
+            reader.readAsDataURL(selectedFile);
+        }
+    };
+
+    const handleRemove = () => {
+        setPreview(null);
+        setSelectedFile(null);
+        onUpdatePhoto(null); // Pasa null para eliminar la foto
+    };
+    
+    // Si el usuario guardó un archivo (selectedFile) pero
+    // quiere cancelar, debemos revocar la URL de la preview
+    // para evitar fugas de memoria.
+    const handleClose = () => {
+        if (selectedFile) {
+            URL.revokeObjectURL(preview);
+        }
+        onClose();
+    }
+
+    return (
+        &lt;div 
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center z-50 animate-fadeIn px-4"
+            onClick={handleClose}
+        &gt;
+            &lt;div 
+                className="bg-white rounded-2xl shadow-2xl w-full max-w-md transform transition-all duration-300"
+                onClick={(e) => e.stopPropagation()}
+            &gt;
+                {/* Header */}
+                &lt;div className="bg-gradient-to-r from-orange-500 via-pink-500 to-purple-500 rounded-t-2xl p-6 relative"&gt;
+                    &lt;button 
+                        type="button"
+                        onClick={handleClose}
+                        className="absolute top-4 right-4 text-white/90 hover:text-white hover:bg-white/20 rounded-full p-1.5 transition-all duration-200"
+                    &gt;
+                        &lt;svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}&gt;
+                            &lt;path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /&gt;
+                        &lt;/svg&gt;
+                    &lt;/button&gt;
+                    &lt;h2 className="text-2xl font-bold text-white !border-none !pb-0 !mb-1"&gt;Foto de Perfil&lt;/h2&gt;
+                    &lt;p className="text-white/90 mt-1 text-sm !mb-0"&gt;Sube o actualiza tu foto&lt;/p&gt;
+                &lt;/div&gt;
+
+                {/* Contenido */}
+                &lt;div className="p-8"&gt;
+                    {/* Preview de la foto */}
+                    &lt;div className="flex flex-col items-center mb-6"&gt;
+                        &lt;div className="relative"&gt;
+                            {preview ? (
+                                &lt;img 
+                                    src={preview} 
+                                    alt="Profile Preview" 
+                                    className="w-32 h-32 rounded-full object-cover border-4 border-gray-200 shadow-lg"
+                                /&gt;
+                            ) : (
+                                &lt;div className="w-32 h-32 rounded-full bg-gradient-to-r from-orange-400 to-pink-400 flex items-center justify-center text-white text-4xl font-bold border-4 border-gray-200 shadow-lg"&gt;
+                                    {currentUser.name.charAt(0).toUpperCase()}
+                                &lt;/div&gt;
+                            )}
+                            {/* Ícono de cámara */}
+                            &lt;label htmlFor="file-upload" className="absolute bottom-0 right-0 bg-gradient-to-r from-orange-500 to-pink-500 rounded-full p-2 shadow-lg cursor-pointer hover:scale-110 transition-transform"&gt;
+                                &lt;svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+                                    &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /&gt;
+                                    &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /&gt;
+                                &lt;/svg&gt;
+                            &lt;/label&gt;
+                        &lt;/div&gt;
+                        &lt;p className="text-gray-600 text-sm mt-4 !mb-0"&gt;
+                            Formatos: JPG, PNG • Máximo 5MB
+                        &lt;/p&gt;
+                    &lt;/div&gt;
+
+                    {/* Input de archivo (oculto) */}
+                    &lt;input 
+                        id="file-upload"
+                        type="file" 
+                        accept="image/*"
+                        onChange={handleFileSelect}
+                        className="hidden"
+                    /&gt;
+
+                    {/* Botones de acción */}
+                    &lt;div className="space-y-3"&gt;
+                        
+                        {/* Botón para guardar (solo si se seleccionó un archivo nuevo) */}
+                        {selectedFile && (
+                            &lt;button 
+                                onClick={handleSave}
+                                className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 flex items-center justify-center shadow-md hover:shadow-lg"
+                            &gt;
+                                &lt;svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+                                    &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /&gt;
+                                &lt;/svg&gt;
+                                Guardar Foto
+                            &lt;/button&gt;
+                        )}
+
+                        {/* Botón para eliminar foto (solo si hay una foto) */}
+                        {preview && (
+                            &lt;button 
+                                onClick={handleRemove}
+                                className="w-full bg-red-100 hover:bg-red-200 text-red-600 font-semibold py-3 px-6 rounded-lg transition-all duration-200 flex items-center justify-center"
+                            &gt;
+                                &lt;svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+                                    &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /&gt;
+                                &lt;/svg&gt;
+                                Eliminar Foto
+                            &lt;/button&gt;
+                        )}
+
+                        {/* Botón cancelar */}
+                        &lt;button 
+                            onClick={handleClose}
+                            className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-6 rounded-lg transition-all duration-200"
+                        &gt;
+                            {selectedFile ? 'Cancelar' : 'Cerrar'}
+                        &lt;/button&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    );
+};
+
+export default ProfilePhotoModal;
+</code></pre>
+        </article>
+        
+        <!-- Paso 5: MainHeader.jsx -->
+        <article class="bg-white p-6 md:p-8 rounded-lg shadow-xl mb-10">
+            <h2><span class="text-indigo-500 mr-3 text-4xl font-black">5</span> Actualizar MainHeader.jsx (¡Con Menú!)</h2>
+            <p>Este es un gran cambio. El header ahora será "sticky" (fijo arriba), y el botón de "Iniciar Sesión" se reemplaza por un avatar. Al hacer clic en el avatar, se abre un menú desplegable con opciones para "Cambiar foto" y "Cerrar sesión".</p>
+            
+            <div class="action-box">
+                <strong>Acción:</strong> Reemplaza el contenido de <code>MainHeader.jsx</code>. <strong>¡RECUERDA LA ADVERTENCIA INICIAL SOBRE GUARDAR TUS ENLACES!</strong>
+            </div>
+            <div class="location-box">
+                <strong>Ubicación:</strong> <code>src/assets/components/header/MainHeader.jsx</code>
+            </div>
+<pre>
+<button class="copy-btn">Copiar</button>
+<code class="language-jsx">
+// src/assets/components/header/MainHeader.jsx
+import React, { useState } from 'react';
+import MenuIcon from '../icons/MenuIcons.jsx';
+import CartIcon from '../icons/CartIcon.jsx';
+import CloseIcon from '../icons/CloseIcon.jsx';
+import NavLinkHeader from './NavLinkHeader.jsx';
+
+const LoginIcon = () => (
+    &lt;svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}&gt;
+        &lt;path strokeLinecap="round" strokeLinejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" /&gt;
+    &lt;/svg&gt;
+);
+
+const LogoutIcon = () => (
+    &lt;svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}&gt;
+        &lt;path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" /&gt;
+    &lt;/svg&gt;
+);
+
+const MainHeader = ({ navigateTo, currentUser, onLogout, onShowLogin, onShowProfilePhoto }) => {
+    const COMPANY_NAME = "shoreline";
+    const [navClass, setnavClass] = useState("hidden font-bold md:mr-auto md:gap-4 md:flex md:flex-row top-0 left-0 p-8 md:static md:p-0 md:h-auto");
+    const [showUserMenu, setShowUserMenu] = useState(false);
+
+    const handleOpenMenu = () => {
+        setnavClass("absolute w-4/5 font-bold flex flex-col md:mr-auto md:gap-4 md:flex md:flex-row top-0 left-0 bg-white h-full p-8 gap-y-[21px] md:static md:p-0 md:h-auto z-10 shadow-2xl");
+    };
+    
+    const handleClosedMenu = () => {
+        setnavClass("hidden font-bold md:mr-auto md:gap-4 md:flex md:flex-row top-0 left-0 p-8 md:static md:p-0 md:h-auto");
+    };
+
+    return (
+        &lt;&gt;
+            &lt;header className='container mx-auto flex items-center px-4 gap-8 bg-white h-20 border-b border-gray-200 sticky top-0 z-40 shadow-sm'&gt;
+                &lt;button className='md:hidden hover:bg-gray-100 p-2 rounded-lg transition-colors duration-200' onClick={handleOpenMenu}&gt;
+                    &lt;MenuIcon /&gt;
+                &lt;/button&gt;
+                
+                &lt;div 
+                    onClick={() => navigateTo('home')} 
+                    className='mr-auto md:mr-0 font-black text-3xl text-gray-900 tracking-wider cursor-pointer hover:text-gray-700 transition-colors duration-200'
+                &gt;
+                    {COMPANY_NAME}
+                &lt;/div&gt;
+                
+                &lt;nav className={navClass}&gt;
+                    &lt;button className='mb-12 md:hidden hover:bg-gray-100 p-2 rounded-lg transition-colors duration-200 self-start' onClick={handleClosedMenu}&gt;
+                        &lt;CloseIcon /&gt;
+                    &lt;/button&gt;
+                    {/* ===== ¡AQUÍ DEBES PONER TUS ENLACES! ===== */}
+                    &lt;NavLinkHeader text="Hombre" onClick={() => navigateTo('men')} /&gt;
+                    &lt;NavLinkHeader text="Mujer" onClick={() => navigateTo('women')} /&gt;
+                    &lt;NavLinkHeader text="Acerca de" onClick={() => navigateTo('about')} /&gt;
+                    {/* ============================================= */}
+                &lt;/nav&gt;
+                
+                &lt;div className='flex items-center gap-4 ml-auto'&gt;
+                    &lt;button className="relative hover:bg-gray-100 p-2 rounded-lg transition-all duration-200 group text-gray-600 hover:text-gray-900"&gt;
+                        &lt;CartIcon /&gt;
+                        &lt;span className="absolute -top-1 -right-1 bg-gray-800 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold shadow-lg group-hover:scale-110 transition-transform"&gt;
+                            0
+                        &lt;/span&gt;
+                    &lt;/button&gt;
+                    
+                    {currentUser ? (
+                        &lt;div className="relative"&gt;
+                            {/* Avatar clickeable */}
+                            &lt;button 
+                                onClick={() => setShowUserMenu(!showUserMenu)}
+                                className="flex items-center gap-3 hover:bg-gray-50 px-3 py-2 rounded-full transition-all duration-200"
+                            &gt;
+                                {/* Foto de perfil o inicial */}
+                                {currentUser.profilePhoto ? (
+                                    &lt;img 
+                                        src={currentUser.profilePhoto} 
+                                        alt={currentUser.name}
+                                        className="w-10 h-10 rounded-full object-cover border-2 border-gray-200 hover:border-orange-400 transition-all duration-200 shadow-sm"
+                                    /&gt;
+                                ) : (
+                                    &lt;div className="w-10 h-10 bg-gradient-to-r from-orange-400 to-pink-400 rounded-full flex items-center justify-center text-white font-bold text-sm border-2 border-gray-200 hover:border-orange-400 transition-all duration-200 shadow-sm"&gt;
+                                        {currentUser.name.charAt(0).toUpperCase()}
+                                    &lt;/div&gt;
+                                )}
+                                &lt;span className="hidden sm:block font-semibold text-gray-700 text-sm"&gt;
+                                    ¡Hola, {currentUser.name.split(' ')[0]}!
+                                &lt;/span&gt;
+                                {/* Flecha dropdown */}
+                                &lt;svg className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${showUserMenu ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+                                    &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /&gt;
+                                &lt;/svg&gt;
+                            &lt;/button&gt;
+
+                            {/* Menú dropdown */}
+                            {showUserMenu && (
+                                &lt;div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50 animate-slideUp"&gt;
+                                    &lt;div className="px-4 py-3 border-b border-gray-100"&gt;
+                                        &lt;p className="text-sm font-semibold text-gray-900 !mb-1"&gt;{currentUser.name}&lt;/p&gt;
+                                        &lt;p className="text-xs text-gray-500 !mb-0"&gt;{currentUser.email || 'usuario@email.com'}&lt;/p&gt;
+                                    &lt;/div&gt;
+                                    
+                                    &lt;button 
+                                        onClick={() => {
+                                            setShowUserMenu(false);
+                                            onShowProfilePhoto();
+                                        }}
+                                        className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3 transition-colors duration-150"
+                                    &gt;
+                                        &lt;svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;
+                                            &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /&gt;
+                                            &lt;path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /&gt;
+                                        &lt;/svg&gt;
+                                        Cambiar foto de perfil
+                                    &lt;/button&gt;
+
+                                    &lt;button 
+                                        onClick={() => {
+                                            setShowUserMenu(false);
+                                            onLogout();
+                                        }}
+                                        className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-3 transition-colors duration-150 border-t border-gray-100 mt-2 pt-2"
+                                    &gt;
+                                        &lt;LogoutIcon /&gt;
+                                        Cerrar sesión
+                                    &lt;/button&gt;
+                                &lt;/div&gt;
+                            )}
+                        &lt;/div&gt;
+                    ) : (
+                        &lt;button 
+                            onClick={onShowLogin} 
+                            className="flex items-center gap-2 text-white font-semibold bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 px-5 py-2.5 rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md hover:shadow-lg group"
+                        &gt;
+                            &lt;LoginIcon /&gt;
+                            &lt;span className="hidden sm:inline"&gt;Iniciar Sesión&lt;/span&gt;
+                        &lt;/button&gt;
+                    )}
+                &lt;/div&gt;
+            &lt;/header&gt;
+        &lt;/&gt;
+    );
+};
+
+export default MainHeader;
+</code></pre>
+        </article>
+
+        <!-- Paso 6: App.jsx -->
+        <article class="bg-white p-6 md:p-8 rounded-lg shadow-xl mb-10">
+            <h2><span class="text-indigo-500 mr-3 text-4xl font-black">6</span> Actualizar App.jsx (¡El Cerebro!)</h2>
+            <p>Este es el cambio más importante. Añadimos <code>useEffect</code> para guardar y cargar el usuario desde <code>localStorage</code>, un estado de carga (<code>isLoading</code>), y la lógica para manejar el nuevo modal de foto de perfil.</p>
+            
+            <div class="action-box">
+                <strong>Acción:</strong> Reemplaza todo el contenido de <code>App.jsx</code>.
+            </div>
+            <div class="location-box">
+                <strong>Ubicación:</strong> <code>src/App.jsx</code>
+            </div>
+<pre>
+<button class="copy-btn">Copiar</button>
+<code class="language-jsx">
+// src/App.jsx
+import React, { useState, useEffect } from 'react';
 import MainHeader from './assets/components/header/MainHeader.jsx';
 import CategoryPage from './assets/components/pages/CategoryPage.jsx';
-import AboutPage from './assets/components/pages/AboutPage.jsx';
 import MainProduct from './assets/components/product/MainProduct.jsx';
 import PromocionBanner from './assets/components/product/PromocionBanner.jsx';
 import FeaturedProducts from './assets/components/product/FeaturedProducts.jsx';
 import FooterProduct from './assets/components/product/FooterProduct.jsx';
 import LoginModal from './assets/components/modals/LoginModal.jsx';
-import { users } from '../data/user.js'; // Ajusta la ruta si es necesario
+import ProfilePhotoModal from './assets/components/modals/ProfilePhotoModal.jsx';
+import { users } from '../src/data/user.js'; // Asegúrate que la ruta a user.js sea correcta
 
 const HomePage = () => (
     &lt;&gt;
@@ -171,130 +756,213 @@ const HomePage = () => (
 const App = () => {
     const [currentPage, setCurrentPage] = useState('home');
     const [currentUser, setCurrentUser] = useState(null);
-    const [isLoginModalOpen, setIsLoginModalOpen] = useState(false); // Estado del modal
+    const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+    const [isProfilePhotoModalOpen, setIsProfilePhotoModalOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(true); // Estado de carga inicial
+
+    // ===== RESTAURAR SESIÓN AL CARGAR LA APP =====
+    useEffect(() => {
+        const restoreSession = () => {
+            try {
+                // Buscar usuario guardado en localStorage
+                const savedUser = localStorage.getItem('currentUser');
+                
+                if (savedUser) {
+                    const userData = JSON.parse(savedUser);
+                    
+                    // Cargar también la foto de perfil (guardada como Base64)
+                    const savedPhoto = localStorage.getItem(`profilePhoto_${userData.username}`);
+                    
+                    setCurrentUser({
+                        ...userData,
+                        profilePhoto: savedPhoto || null
+                    });
+                    
+                    console.log('Sesión restaurada:', userData.name);
+                }
+            } catch (error) {
+                console.error('Error al restaurar sesión:', error);
+                // Si hay error, limpiar localStorage
+                localStorage.removeItem('currentUser');
+            } finally {
+                setIsLoading(false); // Termina la carga
+            }
+        };
+
+        restoreSession();
+    }, []); // El array vacío [] asegura que esto solo se ejecute UNA VEZ al montar
+
+    // ===== GUARDAR DATOS DEL USUARIO CUANDO CAMBIA =====
+    // Este useEffect se dispara CADA VEZ que 'currentUser' cambia
+    useEffect(() => {
+        if (currentUser) {
+            // Guardar usuario en localStorage (sin la foto, esa se guarda separada)
+            const userToSave = {
+                id: currentUser.id, // Guardamos ID por si acaso
+                username: currentUser.username,
+                name: currentUser.name,
+                email: currentUser.email || `${currentUser.username}@shoreline.com`
+            };
+            localStorage.setItem('currentUser', JSON.stringify(userToSave));
+        } else {
+            // Si no hay usuario (logout), eliminar del localStorage
+            localStorage.removeItem('currentUser');
+        }
+    }, [currentUser]); // Se ejecuta cuando 'currentUser' cambia
 
     const login = (username, password) => {
         const foundUser = users.find(u => u.username === username && u.password === password);
         if (foundUser) {
-            setCurrentUser(foundUser);
-            return true; // Éxito
+            // Cargar foto guardada (Base64) si existe
+            const savedPhoto = localStorage.getItem(`profilePhoto_${username}`);
+            
+            const userWithPhoto = {
+                ...foundUser,
+                email: foundUser.email || `${username}@shoreline.com`,
+                profilePhoto: savedPhoto || null
+            };
+            
+            setCurrentUser(userWithPhoto);
+            console.log('Login exitoso:', userWithPhoto.name);
+            return true;
         }
-        return false; // Fallo
+        return false;
     };
-    const logout = () => { setCurrentUser(null); navigateTo('home'); };
+
+    const logout = () => { 
+        // Limpiar sesión de localStorage (el useEffect de arriba lo hará, pero
+        // somos explícitos por si acaso)
+        localStorage.removeItem('currentUser');
+        console.log('Sesión cerrada');
+        
+        setCurrentUser(null); 
+        navigateTo('home'); 
+    };
+
+    const updateProfilePhoto = (photoDataURL) => {
+        if (currentUser) {
+            // Guardar o eliminar foto en localStorage
+            if (photoDataURL) {
+                // Guardamos la imagen como un string Base64
+                localStorage.setItem(`profilePhoto_${currentUser.username}`, photoDataURL);
+            } else {
+                localStorage.removeItem(`profilePhoto_${currentUser.username}`);
+            }
+            
+            // Actualizar estado
+            setCurrentUser(prev => ({
+                ...prev,
+                profilePhoto: photoDataURL
+            }));
+        }
+    };
+
     const navigateTo = (page) => { setCurrentPage(page); };
+
     const renderPage = () => {
-         switch (currentPage) {
+        switch (currentPage) {
             case 'women':
                 return &lt;CategoryPage title="Colección Mujer" category="Mujer" /&gt;;
             case 'men':
                 return &lt;CategoryPage title="Colección Hombre" category="Hombre" /&gt;;
             case 'about':
-                return &lt;AboutPage /&gt;;
+                // Puedes reemplazar esto por tu componente AboutPage si lo tienes
+                return &lt;div className="container mx-auto py-20 px-4"&gt;&lt;h1 className="text-4xl font-bold"&gt;Acerca de Nosotros&lt;/h1&gt;&lt;/div&gt;;
             default:
                 return &lt;HomePage /&gt;;
         }
     };
+
     const openLoginModal = () => setIsLoginModalOpen(true);
     const closeLoginModal = () => setIsLoginModalOpen(false);
+    const openProfilePhotoModal = () => setIsProfilePhotoModalOpen(true);
+    const closeProfilePhotoModal = () => setIsProfilePhotoModalOpen(false);
 
+    // Mostrar un "loading" mientras se restaura la sesión
+    if (isLoading) {
+        return (
+            &lt;div className="flex items-center justify-center min-h-screen bg-gray-50"&gt;
+                &lt;div className="text-center"&gt;
+                    &lt;div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mb-4"&gt;&lt;/div&gt;
+                    &lt;p className="text-gray-600 font-semibold"&gt;Cargando Tienda...&lt;/p&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        );
+    }
+
+    // App principal
     return (
         &lt;div&gt;
             &lt;MainHeader
                 navigateTo={navigateTo}
                 currentUser={currentUser}
                 onLogout={logout}
-                onShowLogin={openLoginModal} // Pasamos la función para abrir el modal
+                onShowLogin={openLoginModal}
+                onShowProfilePhoto={openProfilePhotoModal} // Nueva prop
             /&gt;
+            
             {renderPage()}
+            
+            {/* --- Modales --- */}
             {isLoginModalOpen && &lt;LoginModal onLogin={login} onClose={closeLoginModal} /&gt;}
+            
+            {isProfilePhotoModalOpen && currentUser && (
+                &lt;ProfilePhotoModal 
+                    currentUser={currentUser}
+                    onUpdatePhoto={updateProfilePhoto}
+                    onClose={closeProfilePhotoModal}
+                /&gt;
+            )}
         &lt;/div&gt;
     );
 };
+
 export default App;
 </code></pre>
-            </section>
-
-            <!-- Paso 4 -->
-            <section class="mb-12 bg-white p-8 rounded-lg shadow-lg">
-                <h2>Paso 4: Actualizando el Header con Botones Dinámicos</h2>
-                <p>Finalmente, modificamos el <code>MainHeader</code>. Ahora mostrará "Iniciar Sesión" si no hay nadie conectado (<code>currentUser</code> es <code>null</code>), o un saludo y "Cerrar Sesión" si el <code>currentUser</code> existe.</p>
-                <div class="action-box">
-                    <strong>Acción:</strong> Reemplaza el contenido de <code>src/assets/components/header/MainHeader.jsx</code> con este código. Observa cómo usa las nuevas propiedades <code>currentUser</code>, <code>onLogout</code> y <code>onShowLogin</code> para decidir qué botones mostrar.
-                </div>
-                <div class="location-box">
-                    <strong>Ubicación:</strong> <code>src/assets/components/header/MainHeader.jsx</code>
-                </div>
-<pre><code class="language-jsx">
-// src/assets/components/header/MainHeader.jsx
-import React, { useState } from 'react';
-// --- Asegúrate que estas rutas coincidan con tu estructura ---
-import MenuIcon from '../icons/MenuIcons.jsx';
-import CartIcon from '../icons/CartIcon.jsx';
-import CloseIcon from '../icons/CloseIcon.jsx';
-import NavLinkHeader from './NavLinkHeader.jsx';
-
-// Iconos simples (puedes reemplazarlos por SVGs más elaborados si prefieres)
-const LoginIcon = () => ( &lt;svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}&gt; &lt;path strokeLinecap="round" strokeLinejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" /&gt; &lt;/svg&gt; );
-const LogoutIcon = () => ( &lt;svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}&gt; &lt;path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" /&gt; &lt;/svg&gt; );
-
-const MainHeader = ({ navigateTo, currentUser, onLogout, onShowLogin }) => {
-    const COMPANY_NAME = "shoreline";
-    const [navClass, setnavClass] = useState("hidden font-bold md:mr-auto md:gap-4 md:flex md:flex-row top-0 left-0 p-8 md:static md:p-0 md:h-auto");
-
-    const handleOpenMenu = () => {
-        setnavClass("absolute w-4/5 font-bold flex flex-col md:mr-auto md:gap-4 md:flex md:flex-row top-0 left-0 bg-white h-full p-8 gap-y-[21px] md:static md:p-0 md:h-auto z-10");
-    };
-    const handleClosedMenu = () => {
-         setnavClass("hidden font-bold md:mr-auto md:gap-4 md:flex md:flex-row top-0 left-0 p-8 md:static md:p-0 md:h-auto");
-    };
-
-    return (
-        &lt;&gt;
-            &lt;header className='container mx-auto flex items-center px-4 gap-8 bg-white h-20 border-b border-gray-200'&gt;
-                &lt;button className='md:hidden' onClick={handleOpenMenu}&gt;&lt;MenuIcon /&gt;&lt;/button&gt;
-                &lt;div onClick={() => navigateTo('home')} className='mr-auto md:mr-0 font-black text-3xl text-gray-900 tracking-wider cursor-pointer'&gt;
-                    {COMPANY_NAME}
-                &lt;/div&gt;
-                &lt;nav className={navClass}&gt;
-                   &lt;button className='mb-12 md:hidden' onClick={handleClosedMenu}&gt;&lt;CloseIcon /&gt;&lt;/button&gt;
-                   &lt;NavLinkHeader text="Hombre" onClick={() => navigateTo('men')} /&gt;
-                   &lt;NavLinkHeader text="Mujer" onClick={() => navigateTo('women')} /&gt;
-                   {/* &lt;NavLinkHeader text="Oferta" onClick={() => navigateTo('sale')} /&gt; */}
-                   &lt;NavLinkHeader text="Acerca de" onClick={() => navigateTo('about')} /&gt;
-                &lt;/nav&gt;
-                &lt;div className='flex items-center gap-6 ml-auto'&gt;
-                    &lt;button className="relative"&gt;&lt;CartIcon /&gt;&lt;/button&gt;
-                    {/* --- Zona de Login / Usuario --- */}
-                    {currentUser ? (
-                        &lt;div className="flex items-center gap-4"&gt;
-                            &lt;span className="user-greeting font-semibold text-gray-700 hidden sm:block"&gt;Hola, {currentUser.name.split(' ')[0]}&lt;/span&gt;
-                            &lt;button onClick={onLogout} className="btn-logout flex items-center text-sm text-red-600 hover:text-red-800 transition font-semibold bg-red-50 hover:bg-red-100 px-3 py-2 rounded-md"&gt;&Glt;LogoutIcon /&gt; &lt;span className="ml-1"&gt;Cerrar Sesión&lt;/span&gt;&lt;/button&gt;
-                        &lt;/div&gt;
-                    ) : (
-                        &lt;button onClick={onShowLogin} className="btn-login flex items-center gap-2 text-gray-600 hover:text-orange-500 transition font-semibold bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-md"&gt;&lt;LoginIcon /&gt; Iniciar Sesión&lt;/button&gt;
-                    )}
-                &lt;/div&gt;
-            &lt;/header&gt;
-        &lt;/&gt;
-    );
-};
-export default MainHeader;
-</code></pre>
-            </section>
-            
-            <!-- Conclusión -->
-            <section class="mt-12 text-center bg-green-100 p-8 rounded-lg shadow-lg">
-                <h2 class="text-3xl font-bold text-green-800 border-none">¡Prueba Final!</h2>
-                <p class="text-xl text-green-700">¡Con estos 4 pasos, has implementado un sistema de inicio de sesión con modal! Ahora la aplicación se siente mucho más completa.</p>
-                <p class="text-xl text-green-700">Prueba a iniciar sesión con <strong>estudiante1 / password123</strong> para ver el cambio en el header. ¡Excelente trabajo!</p>
-            </section>
         </article>
-    </div>
 
-    <!-- Script para inicializar highlight.js -->
+        <!-- Conclusión -->
+        <section class="mt-12 text-center bg-emerald-50 p-8 rounded-lg shadow-lg border border-emerald-200">
+            <h2 class="text-3xl font-bold text-emerald-800 !border-none">¡Prueba Final!</h2>
+            <p class="text-xl text-emerald-700">¡Felicidades! Has implementado un sistema de sesión completo. Es hora de probarlo:</p>
+            <ul class="list-disc list-inside text-left max-w-lg mx-auto text-lg text-emerald-700 space-y-2 mt-6">
+                <li><strong>Inicia sesión</strong> con <code>profe</code> / <code>profe24</code>.</li>
+                <li><strong>Recarga la página</strong> (F5). Deberías seguir conectado.</li>
+                <li>Haz clic en tu avatar y selecciona <strong>"Cambiar foto de perfil"</strong>.</li>
+                <li>Sube una imagen y guárdala.</li>
+                <li><strong>Recarga la página otra vez.</strong> ¡Tu foto de perfil debería seguir ahí!</li>
+                <li>Finalmente, haz clic en <strong>"Cerrar sesión"</strong>.</li>
+            </ul>
+        </section>
+
+    </main>
+    
+    <!-- Scripts para Highlight.js y Botón de Copiar -->
     <script>
+        // 1. Inicializar Highlight.js
         hljs.highlightAll();
+
+        // 2. Funcionalidad del botón de copiar
+        document.querySelectorAll('.copy-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const pre = button.parentElement;
+                const code = pre.querySelector('code');
+                const text = code.innerText;
+
+                navigator.clipboard.writeText(text).then(() => {
+                    button.innerText = '¡Copiado!';
+                    button.classList.add('copied');
+                    setTimeout(() => {
+                        button.innerText = 'Copiar';
+                        button.classList.remove('copied');
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Error al copiar:', err);
+                    button.innerText = 'Error';
+                });
+            });
+        });
     </script>
+
 </body>
 </html>
