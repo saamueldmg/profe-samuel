@@ -1,506 +1,300 @@
 <!DOCTYPE html>
-<html lang="es" class="scroll-smooth">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guía Interactiva de Refactorización</title>
-    <!-- Chosen Palette: Developer's Focus (#F3F4F6 background, #FFFFFF cards, #3B82F6 primary accent) -->
-    <!-- Application Structure Plan: A single-page, vertical scrolling layout divided into thematic sections, one for each step of the tutorial. A sticky sidebar navigation allows for quick jumping between steps. The primary interaction is clicking the "Copy" button on code blocks. An intersection observer highlights the current step in the sidebar. This structure directly mirrors the linear, step-by-step nature of the source tutorial, making it intuitive to follow. The "copy" functionality dramatically improves usability over a static markdown file. -->
-    <!-- Visualization & Content Choices: The tutorial is presented as a series of styled cards. Code is presented in syntax-highlighted blocks. A "Copy to clipboard" button is added to each code block. This improves readability and usability. Vanilla JS is used for interactivity, and highlight.js for syntax highlighting. Chart.js/Plotly.js were not used as the source material is a tutorial and contains no quantitative data to visualize; the task is instructional, not analytical. -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <title>Kit de Aprendizaje v7: Inicio de Sesión</title>
+    
+    <!-- 1. Tailwind CSS para los estilos de la página -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- 2. Highlight.js para el resaltado de código -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- Carga de lenguajes adicionales para JSX -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/jsx.min.js"></script>
+
     <style>
+        /* Estilos personalizados leves */
         body {
-            background-color: #F3F4F6;
+            @apply bg-gray-50 text-gray-800 leading-relaxed;
         }
-        .hljs {
-            border-radius: 0.5rem;
-            padding: 1.5rem;
+        h1 {
+            @apply text-4xl font-bold text-gray-900 mb-4 tracking-tight;
         }
-        .sidebar-link.active {
-            background-color: #DBEAFE;
-            color: #1D4ED8;
-            font-weight: 600;
+        h2 {
+            @apply text-2xl font-bold text-indigo-700 mb-5 pb-2 border-b border-indigo-200;
+        }
+        p {
+            @apply mb-4 text-lg;
+        }
+        pre {
+            @apply bg-gray-800 text-white p-4 rounded-lg shadow-md overflow-x-auto;
+        }
+        code {
+            @apply font-mono;
+        }
+        .location-box {
+            @apply bg-blue-50 border-l-4 border-blue-500 text-blue-800 p-4 rounded-md my-4 font-mono text-sm;
+        }
+        .action-box {
+            @apply bg-yellow-50 border-l-4 border-yellow-500 text-yellow-800 p-4 rounded-md my-4 text-base;
         }
     </style>
 </head>
-<body class="font-sans text-gray-800">
+<body class="font-sans">
 
-    <div class="container mx-auto p-4 md:p-8">
+    <div class="container mx-auto max-w-4xl p-6 md:p-12">
         <header class="text-center mb-12">
-            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900">Guía Interactiva de Refactorización</h1>
-            <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">Sigue estos pasos para construir y refactorizar la aplicación, usando rutas relativas para máxima compatibilidad.</p>
+            <h1 class="text-4xl md:text-5xl font-extrabold text-indigo-800">Kit de Aprendizaje v7</h1>
+            <p class="text-2xl text-gray-600 mt-2">¡Implementando Inicio de Sesión con Modal!</p>
         </header>
 
-        <div class="flex flex-col md:flex-row gap-8">
-            <!-- Sidebar Navigation -->
-            <aside class="md:w-1/4 lg:w-1/5 md:sticky top-8 self-start">
-                <nav class="bg-white rounded-lg shadow-md p-4">
-                    <h3 class="font-bold text-lg mb-4">Pasos del Taller</h3>
-                    <ul class="space-y-2">
-                        <li><a href="#step-1" class="sidebar-link block px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 transition-colors">Paso 1: Base de Datos</a></li>
-                        <li><a href="#step-2" class="sidebar-link block px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 transition-colors">Paso 2: Iconos</a></li>
-                        <li><a href="#step-3" class="sidebar-link block px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 transition-colors">Paso 3: NavLink</a></li>
-                        <li><a href="#step-4" class="sidebar-link block px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 transition-colors">Paso 4: Header</a></li>
-                        <li><a href="#step-5" class="sidebar-link block px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 transition-colors">Paso 5: ProductCard</a></li>
-                        <li><a href="#step-6" class="sidebar-link block px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 transition-colors">Paso 6: CategoryPage</a></li>
-                        <li><a href="#step-7" class="sidebar-link block px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 transition-colors">Paso 7: App Principal</a></li>
-                        <li><a href="#step-8" class="sidebar-link block px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 transition-colors">Paso 8: Limpieza</a></li>
-                        <li><a href="#step-9" class="sidebar-link block px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 transition-colors">Paso 9: ¡A Probar!</a></li>
-                    </ul>
-                </nav>
-            </aside>
+        <article>
+            <p class="text-xl text-center mb-10">¡Hola, equipo! Vamos a añadir una funcionalidad esencial a nuestra tienda: el inicio de sesión. Lo haremos de una forma moderna y amigable, usando un modal (ventana emergente) en lugar de una página separada. ¡Prepárense para conectar usuarios!</p>
 
-            <!-- Main Content -->
-            <main class="flex-1 space-y-8">
-
-                <!-- Step 1 -->
-                <section id="step-1" class="bg-white rounded-lg shadow-md p-6 md:p-8 min-h-[200px]">
-                    <h2 class="text-2xl font-bold mb-4 text-blue-700">Paso 1: Actualizar la Base de Datos de Productos</h2>
-                    <div class="bg-gray-100 p-4 rounded-lg mb-4 text-sm">
-                        <p><strong class="font-semibold">Archivo a modificar:</strong> <code class="bg-gray-200 px-2 py-1 rounded">src/data/products.js</code></p>
-                        <p><strong class="font-semibold">Acción:</strong> Reemplazar todo el contenido del archivo.</p>
-                    </div>
-                    <div class="relative">
-                        <button class="copy-btn absolute top-4 right-4 bg-gray-600 hover:bg-gray-700 text-white font-semibold text-xs py-1 px-3 rounded-md transition-all">Copiar</button>
-                        <pre><code class="language-javascript">
-// Nuestra base de datos ahora tiene más productos y un campo de "description".
-export const allProducts = [
-    // --- 10 Productos de Mujer ---
-    { id: 101, name: 'Body Básico Gris', category: 'Mujer', subCategory: 'Bodies', color: 'Gris', price: 99.00, imageUrl: 'https://placehold.co/600x800/6b7280/ffffff?text=Body+Gris', description: 'Confeccionado en algodón pima para una suavidad inigualable.' },
-    { id: 102, name: 'Camiseta Gráfica "Nature"', category: 'Mujer', subCategory: 'Camisetas', color: 'Negro', price: 75.00, imageUrl: 'https://placehold.co/600x800/1f2937/ffffff?text=Camiseta+Nature', description: 'Estampado ecológico sobre tejido orgánico.' },
-    { id: 103, name: 'Crop Top Blanco', category: 'Mujer', subCategory: 'Tops', color: 'Blanco', price: 79.00, imageUrl: 'https://placehold.co/600x800/f9fafb/111827?text=Crop+Top', description: 'El básico perfecto para cualquier look de verano.' },
-    { id: 104, name: 'Joggers Negros', category: 'Mujer', subCategory: 'Pantalones', color: 'Negro', price: 159.00, imageUrl: 'https://placehold.co/600x800/111827/ffffff?text=Joggers', description: 'Comodidad y estilo para tu día a día.' },
-    { id: 105, name: 'Vestido Floral', category: 'Mujer', subCategory: 'Vestidos', color: 'Multicolor', price: 189.00, imageUrl: 'https://placehold.co/600x800/fecdd3/ffffff?text=Vestido+Floral', description: 'Silueta fluida y estampado vibrante.' },
-    { id: 106, name: 'Falda-Short Crema', category: 'Mujer', subCategory: 'Faldas', color: 'Blanco', price: 119.00, imageUrl: 'https://placehold.co/600x800/f5f5f4/111827?text=Falda-Short', description: 'La versatilidad de una falda, la comodidad de un short.' },
-    { id: 107, name: 'Blusa de Seda', category: 'Mujer', subCategory: 'Camisas', color: 'Rosa', price: 165.00, imageUrl: 'https://placehold.co/600x800/fbcfe8/ffffff?text=Blusa+Seda', description: 'Elegancia y sofisticación en una sola prenda.' },
-    { id: 108, name: 'Jeans Mom Fit', category: 'Mujer', subCategory: 'Pantalones', color: 'Azul', price: 199.00, imageUrl: 'https://placehold.co/600x800/bfdbfe/ffffff?text=Jeans+Mom+Fit', description: 'Corte retro que nunca pasa de moda.' },
-    { id: 109, name: 'Top Deportivo', category: 'Mujer', subCategory: 'Tops', color: 'Negro', price: 89.00, imageUrl: 'https://placehold.co/600x800/262626/ffffff?text=Top+Deportivo', description: 'Soporte y estilo para tus entrenamientos.' },
-    { id: 110, name: 'Short de Lino', category: 'Mujer', subCategory: 'Shorts', color: 'Blanco', price: 95.00, imageUrl: 'https://placehold.co/600x800/f1f5f9/1e293b?text=Short+Lino', description: 'Frescura y comodidad para los días más cálidos.' },
-
-    // --- 10 Productos de Hombre ---
-    { id: 201, name: 'Polo Clásico Marino', category: 'Hombre', subCategory: 'Polos', color: 'Azul', price: 85.00, imageUrl: 'https://placehold.co/600x800/1e3a8a/ffffff?text=Polo+Marino', description: 'Un clásico atemporal en piqué de algodón.' },
-    { id: 202, name: 'Jeans Slim Fit', category: 'Hombre', subCategory: 'Pantalones', color: 'Azul', price: 179.00, imageUrl: 'https://placehold.co/600x800/374151/ffffff?text=Jeans+Slim', description: 'Corte moderno que se adapta a tu silueta.' },
-    { id: 203, name: 'Camisa Lino Blanca', category: 'Hombre', subCategory: 'Camisas', color: 'Blanco', price: 110.00, imageUrl: 'https://placehold.co/600x800/e5e7eb/1c1917?text=Camisa+Lino', description: 'Ligera y transpirable, ideal para el clima cálido.' },
-    { id: 204, name: 'Sudadera Urbana Gris', category: 'Hombre', subCategory: 'Buzos', color: 'Gris', price: 140.00, imageUrl: 'https://placehold.co/600x800/4b5563/ffffff?text=Sudadera+Urbana', description: 'Algodón perchado para máxima comodidad.' },
-    { id: 205, name: 'Bermuda Cargo', category: 'Hombre', subCategory: 'Shorts', color: 'Verde', price: 125.00, imageUrl: 'https://placehold.co/600x800/4d7c0f/ffffff?text=Bermuda+Cargo', description: 'Diseño funcional con múltiples bolsillos.' },
-    { id: 206, name: 'Camiseta Básica Negra', category: 'Hombre', subCategory: 'Camisetas', color: 'Negro', price: 55.00, imageUrl: 'https://placehold.co/600x800/0a0a0a/ffffff?text=Camiseta+Negra', description: 'El esencial que no puede faltar en tu armario.' },
-    { id: 207, name: 'Chaqueta Rompevientos', category: 'Hombre', subCategory: 'Chaquetas', color: 'Negro', price: 195.00, imageUrl: 'https://placehold.co/600x800/171717/ffffff?text=Chaqueta', description: 'Protección ligera contra el viento y la lluvia.' },
-    { id: 208, name: 'Pantalón Chino Beige', category: 'Hombre', subCategory: 'Pantalones', color: 'Blanco', price: 160.00, imageUrl: 'https://placehold.co/600x800/f5f5f4/1c1917?text=Pantalón+Chino', description: 'Versatilidad y elegancia para cualquier ocasión.' },
-    { id: 209, name: 'Camisa de Rayas', category: 'Hombre', subCategory: 'Camisas', color: 'Azul', price: 115.00, imageUrl: 'https://placehold.co/600x800/93c5fd/ffffff?text=Camisa+Rayas', description: 'Estilo clásico con un toque moderno.' },
-    { id: 210, name: 'Buzo con Capucha', category: 'Hombre', subCategory: 'Buzos', color: 'Negro', price: 150.00, imageUrl: 'https://placehold.co/600x800/262626/ffffff?text=Buzo+Capucha', description: 'Comodidad y calidez para los días fríos.' },
+            <!-- Paso 1 -->
+            <section class="mb-12 bg-white p-8 rounded-lg shadow-lg">
+                <h2>Paso 1: Preparando la Base de Datos de Usuarios (user.js)</h2>
+                <p>Necesitamos tener una lista de usuarios "registrados" para probar nuestro login. Estos son datos de prueba. Fíjate en los campos <code>username</code>, <code>password</code> y <code>name</code>.</p>
+                <div class="action-box">
+                    <strong>Acción:</strong> Asegúrate de tener la carpeta <code>data</code> dentro de <code>src</code>. Dentro de <code>data</code>, crea o verifica el archivo <code>user.js</code> con este contenido.
+                </div>
+                <div class="location-box">
+                    <strong>Ubicación:</strong> <code>src/data/user.js</code>
+                </div>
+<pre><code class="language-javascript">
+// src/data/user.js
+export const users = [
+    { id: 1, username: 'estudiante1', password: 'password123', name: 'Ana García' },
+    { id: 2, username: 'profe', password: 'password456', name: 'Carlos Profe' },
+    { id: 3, username: 'maria', password: 'password789', name: 'María López' },
+    { id: 4, username: 'david', password: 'password101', name: 'David Gómez' },
+    { id: 5, username: 'sofia', password: 'password112', name: 'Sofía Rodríguez' },
 ];
-                        </code></pre>
-                    </div>
-                </section>
-                
-                <!-- Step 2 -->
-                <section id="step-2" class="bg-white rounded-lg shadow-md p-6 md:p-8 min-h-[200px]">
-                    <h2 class="text-2xl font-bold mb-4 text-blue-700">Paso 2: Crear Componentes de Iconos</h2>
-                     <div class="bg-gray-100 p-4 rounded-lg mb-4 text-sm">
-                        <p><strong class="font-semibold">Acción:</strong> Crear los siguientes 3 archivos en la carpeta <code class="bg-gray-200 px-2 py-1 rounded">src/assets/components/icons/</code>.</p>
-                        <p>Estos son componentes simples que usan HTML y Tailwind para renderizar los iconos.</p>
-                    </div>
-                    <div class="space-y-4">
-                        <div>
-                            <p class="font-semibold mb-2"><code class="bg-gray-200 px-2 py-1 rounded">MenuIcons.jsx</code></p>
-                            <div class="relative"><button class="copy-btn absolute top-4 right-4 bg-gray-600 hover:bg-gray-700 text-white font-semibold text-xs py-1 px-3 rounded-md transition-all">Copiar</button><pre><code class="language-jsx">export default () => (&lt;svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"&gt;&lt;path d="M4 6H20M4 12H20M4 18H20" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/&gt;&lt;/svg&gt;);</code></pre></div>
-                        </div>
-                        <div>
-                            <p class="font-semibold mb-2"><code class="bg-gray-200 px-2 py-1 rounded">CartIcon.jsx</code></p>
-                            <div class="relative"><button class="copy-btn absolute top-4 right-4 bg-gray-600 hover:bg-gray-700 text-white font-semibold text-xs py-1 px-3 rounded-md transition-all">Copiar</button><pre><code class="language-jsx">export default () => (&lt;svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"&gt;&lt;path d="M9 21C9.55228 21 10 20.5523 10 20C10 19.4477 9.55228 19 9 19C8.44772 19 8 19.4477 8 20C8 20.5523 8.44772 21 9 21Z" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/&gt;&lt;path d="M20 21C20.5523 21 21 20.5523 21 20C21 19.4477 20.5523 19 20 19C19.4477 19 19 19.4477 19 20C19 20.5523 19.4477 21 20 21Z" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/&gt;&lt;path d="M1 1H5L7.68 14.39C7.77144 14.8504 8.02191 15.264 8.38755 15.5583C8.75318 15.8526 9.2107 16.009 9.68 16H19.4C19.8693 16.009 20.3268 15.8526 20.6925 15.5583C21.0581 15.264 21.3086 14.8504 21.4 14.39L23 6H6" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/&gt;&lt;/svg&gt;);</code></pre></div>
-                        </div>
-                        <div>
-                            <p class="font-semibold mb-2"><code class="bg-gray-200 px-2 py-1 rounded">CloseIcon.jsx</code></p>
-                            <div class="relative"><button class="copy-btn absolute top-4 right-4 bg-gray-600 hover:bg-gray-700 text-white font-semibold text-xs py-1 px-3 rounded-md transition-all">Copiar</button><pre><code class="language-jsx">export default () => (&lt;svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"&gt;&lt;path d="M18 6L6 18" stroke="#1F2937" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/&gt;&lt;path d="M6 6L18 18" stroke="#1F2937" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/&gt;&lt;/svg&gt;);</code></pre></div>
-                        </div>
-                    </div>
-                </section>
-                
-                <!-- Step 3 -->
-                <section id="step-3" class="bg-white rounded-lg shadow-md p-6 md:p-8 min-h-[200px]">
-                    <h2 class="text-2xl font-bold mb-4 text-blue-700">Paso 3: Crear Componente de Navegación</h2>
-                     <div class="bg-gray-100 p-4 rounded-lg mb-4 text-sm">
-                        <p><strong class="font-semibold">Archivo a crear:</strong> <code class="bg-gray-200 px-2 py-1 rounded">src/assets/components/header/NavLinkHeader.jsx</code></p>
-                        <p><strong class="font-semibold">Acción:</strong> Crear un nuevo archivo en esta ruta.</p>
-                    </div>
-                    <div class="relative">
-                        <button class="copy-btn absolute top-4 right-4 bg-gray-600 hover:bg-gray-700 text-white font-semibold text-xs py-1 px-3 rounded-md transition-all">Copiar</button>
-                        <pre><code class="language-jsx">
-import React from 'react';
+// ¡Recuerden! Guardar contraseñas así es solo para probar, ¡nunca en una app real!
+</code></pre>
+            </section>
 
-export default ({ text, onClick }) => {
-    const handleClick = (e) => {
+            <!-- Paso 2 -->
+            <section class="mb-12 bg-white p-8 rounded-lg shadow-lg">
+                <h2>Paso 2: Creando el Formulario Emergente (LoginModal.jsx)</h2>
+                <p>Este nuevo componente será nuestra ventana de inicio de sesión. Será una ventana "modal" que aparece sobre el contenido.</p>
+                <div class="action-box">
+                    <strong>Acción:</strong> Crea una carpeta <code>modals</code> dentro de <code>src/assets/components/</code>. Dentro de <code>modals</code>, crea el archivo <code>LoginModal.jsx</code> y pega el siguiente código.
+                </div>
+                <div class="location-box">
+                    <strong>Ubicación:</strong> <code>src/assets/components/modals/LoginModal.jsx</code>
+                </div>
+<pre><code class="language-jsx">
+// src/assets/components/modals/LoginModal.jsx
+import React, { useState } from 'react';
+
+const LoginModal = ({ onLogin, onClose }) => {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+
+    const handleSubmit = (e) => {
         e.preventDefault();
-        if (onClick) {
-            onClick();
+        setError('');
+        const loginSuccess = onLogin(username, password);
+        if (loginSuccess) {
+            onClose();
+        } else {
+            setError('Usuario o contraseña incorrectos.');
         }
     };
 
     return (
-        &lt;a href="#" onClick={handleClick} className="relative py-10 group"&gt;
-            &lt;span className="group-hover:text-orange-400 transition-all duration-300"&gt;{text}&lt;/span&gt;
-            &lt;span className="absolute bottom-0 left-0 block h-1 w-full scale-x-0 group-hover:scale-x-100 group-hover:bg-orange-400 transition-all duration-300"&gt;&lt;/span&gt;
-        &lt;/a&gt;
-    );
-};
-                        </code></pre>
-                    </div>
-                </section>
-                
-                <!-- Step 4 -->
-                <section id="step-4" class="bg-white rounded-lg shadow-md p-6 md:p-8 min-h-[200px]">
-                    <h2 class="text-2xl font-bold mb-4 text-blue-700">Paso 4: Crear Componente del Encabezado</h2>
-                     <div class="bg-gray-100 p-4 rounded-lg mb-4 text-sm">
-                        <p><strong class="font-semibold">Archivo a crear:</strong> <code class="bg-gray-200 px-2 py-1 rounded">src/assets/components/header/MainHeader.jsx</code></p>
-                        <p><strong class="font-semibold">Acción:</strong> Crear un nuevo archivo en esta ruta. Fíjate cómo todas las rutas son relativas.</p>
-                    </div>
-                    <div class="relative">
-                        <button class="copy-btn absolute top-4 right-4 bg-gray-600 hover:bg-gray-700 text-white font-semibold text-xs py-1 px-3 rounded-md transition-all">Copiar</button>
-                        <pre><code class="language-jsx">
-import React, { useState } from 'react';
-import AvatarImage from '../../images/image-avatar.png';
-import MenuIcon from '../icons/MenuIcons.jsx';
-import CartIcon from '../icons/CartIcon.jsx';
-import CloseIcon from '../icons/CloseIcon.jsx';
-import NavLinkHeader from './NavLinkHeader.jsx';
-
-const MainHeader = ({ navigateTo }) => {
-    const COMPANY_NAME = "shoreline";
-    const [navClass, setnavClass] = useState("hidden font-bold md:mr-auto md:gap-4 md:flex md:flex-row top-0 left-0 p-8 md:static md:p-0 md:h-auto");
-
-    const handleOpenMenu = () => {
-        setnavClass("absolute w-4/5 font-bold flex flex-col md:mr-auto md:gap-4 md:flex md:flex-row top-0 left-0 bg-white h-full p-8 gap-y-[21px] md:static md:p-0 md:h-auto z-10");
-    };
-
-    const handleClosedMenu = () => {
-        setnavClass("hidden font-bold md:mr-auto md:gap-4 md:flex md:flex-row top-0 left-0 p-8 md:static md:p-0 md:h-auto");
-    };
-
-    return (
-        &lt;&gt;
-            &lt;header className='container mx-auto flex items-center px-4 gap-8 bg-white'&gt;
-                &lt;button className='md:hidden' onClick={handleOpenMenu}&gt;
-                    &lt;MenuIcon /&gt;
-                &lt;/button&gt;
-                &lt;div onClick={() => navigateTo('home')} className='mr-auto md:mr-0 font-black text-3xl text-gray-900 tracking-wider cursor-pointer'&gt;
-                    {COMPANY_NAME}
-                &lt;/div&gt;
-                &lt;nav className={navClass}&gt;
-                    &lt;button className='mb-12 md:hidden' onClick={handleClosedMenu}&gt;
-                        &lt;CloseIcon /&gt;
-                    &lt;/button&gt;
-                    &lt;NavLinkHeader text="Hombre" onClick={() => navigateTo('men')} /&gt;
-                    &lt;NavLinkHeader text="Mujer" onClick={() => navigateTo('women')} /&gt;
-                    &lt;NavLinkHeader text="Oferta" onClick={() => navigateTo('sale')} /&gt;
-                    &lt;NavLinkHeader text="Acerca de" onClick={() => navigateTo('about')} /&gt;
-                &lt;/nav&gt;
-                &lt;div className='flex gap-4'&gt;
-                    &lt;button&gt;
-                        &lt;CartIcon /&gt;
-                    &lt;/button&gt;
-                    &lt;img src={AvatarImage} alt="" className='w-10' /&gt;
-                &lt;/div&gt;
-            &lt;/header&gt;
-            &lt;span className="container mx-auto hidden md:block h-[0.2px] w-full bg-gray-500"&gt;&lt;/span&gt;
-        &lt;/&gt;
-    );
-};
-
-export default MainHeader;
-                        </code></pre>
-                    </div>
-                </section>
-
-                <!-- Step 5 -->
-                <section id="step-5" class="bg-white rounded-lg shadow-md p-6 md:p-8 min-h-[200px]">
-                    <h2 class="text-2xl font-bold mb-4 text-blue-700">Paso 5: Actualizar la Tarjeta de Producto</h2>
-                     <div class="bg-gray-100 p-4 rounded-lg mb-4 text-sm">
-                        <p><strong class="font-semibold">Archivo a modificar:</strong> <code class="bg-gray-200 px-2 py-1 rounded">src/assets/components/common/ProductCard.jsx</code></p>
-                        <p><strong class="font-semibold">Acción:</strong> Reemplazar todo el contenido del archivo.</p>
-                    </div>
-                    <div class="relative">
-                        <button class="copy-btn absolute top-4 right-4 bg-gray-600 hover:bg-gray-700 text-white font-semibold text-xs py-1 px-3 rounded-md transition-all">Copiar</button>
-                        <pre><code class="language-jsx">
-import React from 'react';
-
-const ProductCard = ({ product }) => {
-    return (
-        &lt;div className="group relative flex flex-col text-left animate-fade-in"&gt;
-            &lt;div className="relative overflow-hidden rounded-lg aspect-[3/4]"&gt;
-                &lt;img 
-                    src={product.imageUrl} 
-                    alt={product.name}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                /&gt;
-                &lt;div className="absolute inset-0 flex items-end justify-center p-4 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"&gt;
-                    &lt;button className="w-full font-bold text-gray-900 py-3 px-6 rounded-md bg-white opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0"&gt;
-                        Añadir al carrito
-                    &lt;/button&gt;
-                &lt;/div&gt;
-            &lt;/div&gt;
-            &lt;div className="mt-4 flex-grow"&gt;
-                &lt;h3 className="text-md font-bold text-gray-800"&gt;{product.name}&lt;/h3&gt;
-                &lt;p className="mt-1 text-sm text-gray-500 h-10"&gt;{product.description}&lt;/p&gt;
-            &lt;/div&gt;
-             &lt;p className="mt-2 text-lg font-semibold text-gray-900"&gt;${product.price.toFixed(2)}&lt;/p&gt;
-        &lt;/div&gt;
-    );
-};
-
-export default ProductCard;
-                        </code></pre>
-                    </div>
-                </section>
-                
-                <!-- Step 6 -->
-                <section id="step-6" class="bg-white rounded-lg shadow-md p-6 md:p-8 min-h-[200px]">
-                    <h2 class="text-2xl font-bold mb-4 text-blue-700">Paso 6: Crear la Nueva Página de Categoría</h2>
-                     <div class="bg-gray-100 p-4 rounded-lg mb-4 text-sm">
-                        <p><strong class="font-semibold">Archivo a crear:</strong> <code class="bg-gray-200 px-2 py-1 rounded">src/assets/components/pages/CategoryPage.jsx</code></p>
-                        <p><strong class="font-semibold">Acción:</strong> Crear un nuevo archivo con este nombre y en esa ruta.</p>
-                    </div>
-                    <div class="relative">
-                        <button class="copy-btn absolute top-4 right-4 bg-gray-600 hover:bg-gray-700 text-white font-semibold text-xs py-1 px-3 rounded-md transition-all">Copiar</button>
-                        <pre><code class="language-jsx">
-import React, { useState, useMemo, useEffect } from 'react';
-import ProductCard from '../common/ProductCard.jsx';
-import FooterProduct from '../product/FooterProduct.jsx';
-import { allProducts } from '../../../data/products.js';
-
-const PRODUCTS_PER_PAGE = 8;
-
-const CategoryPage = ({ title, category }) => {
-    const [filters, setFilters] = useState({ subCategory: 'all', color: 'all' });
-    const [currentPage, setCurrentPage] = useState(1);
-
-    const filteredProducts = useMemo(() => {
-        return allProducts.filter(p => {
-            const categoryMatch = p.category === category;
-            const subCategoryMatch = filters.subCategory === 'all' || p.subCategory === filters.subCategory;
-            const colorMatch = filters.color === 'all' || p.color === filters.color;
-            return categoryMatch && subCategoryMatch && colorMatch;
-        });
-    }, [category, filters]);
-
-    useEffect(() => {
-        setCurrentPage(1);
-    }, [filters]);
-
-    const pageCount = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
-    const currentProducts = filteredProducts.slice((currentPage - 1) * PRODUCTS_PER_PAGE, currentPage * PRODUCTS_PER_PAGE);
-
-    const handleFilterChange = (filterType, value) => {
-        setFilters(prevFilters => ({ ...prevFilters, [filterType]: value }));
-    };
-    
-    const subCategories = ['all', ...new Set(allProducts.filter(p => p.category === category).map(p => p.subCategory))];
-    const colors = ['all', ...new Set(allProducts.filter(p => p.category === category).map(p => p.color))];
-
-    return (
-        &lt;div className="animate-fade-in"&gt;
-            &lt;header className="bg-gray-50 py-12"&gt;
-                &lt;div className="container mx-auto px-4 text-center"&gt;
-                    &lt;h1 className="text-5xl font-black text-gray-800"&gt;{title}&lt;/h1&gt;
-                    &lt;p className="text-lg text-gray-600 mt-2"&gt;{filteredProducts.length} productos encontrados&lt;/p&gt;
-                &lt;/div&gt;
-            &lt;/header&gt;
-
-            &lt;div className="container mx-auto px-4 my-12 flex flex-col lg:flex-row gap-8"&gt;
-                &lt;aside className="lg:w-1/4 lg:sticky top-24 self-start bg-white p-6 rounded-xl shadow-lg"&gt;
-                    &lt;h3 className="text-xl font-bold mb-4"&gt;Filtros&lt;/h3&gt;
-                    
+        &lt;div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 animate-fade-in"&gt;
+            &lt;div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-sm"&gt;
+                &lt;h2 className="text-2xl font-bold mb-6 text-center text-gray-800"&gt;Iniciar Sesión&lt;/h2&gt;
+                &lt;form onSubmit={handleSubmit}&gt;
+                    {/* Campos de usuario y contraseña */}
+                    &lt;div className="mb-4"&gt;
+                        &lt;label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username"&gt;Usuario:&lt;/label&gt;
+                        &lt;input id="username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} required className="input-style shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-orange-500" placeholder="Tu nombre de usuario" /&gt;
+                    &lt;/div&gt;
                     &lt;div className="mb-6"&gt;
-                        &lt;h4 className="font-semibold mb-2"&gt;Categoría&lt;/h4&gt;
-                        &lt;div className="flex flex-col gap-2"&gt;
-                            {subCategories.map(sub => (
-                                &lt;button key={sub} onClick={() => handleFilterChange('subCategory', sub)} className={`text-left capitalize py-1 px-2 rounded-md transition ${filters.subCategory === sub ? 'bg-gray-800 text-white font-bold' : 'hover:bg-gray-100'}`}&gt;
-                                    {sub === 'all' ? 'Todas' : sub}
-                                &lt;/button&gt;
-                            ))}
-                        &lt;/div&gt;
+                        &lt;label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password"&gt;Contraseña:&lt;/label&gt;
+                        &lt;input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required className="input-style shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:ring-2 focus:ring-orange-500" placeholder="Tu contraseña" /&gt;
                     &lt;/div&gt;
-
-                    &lt;div&gt;
-                        &lt;h4 className="font-semibold mb-2"&gt;Color&lt;/h4&gt;
-                        &lt;div className="flex flex-wrap gap-2"&gt;
-                            {colors.map(color => (
-                                &lt;button key={color} onClick={() => handleFilterChange('color', color)} className={`capitalize h-8 px-4 rounded-full text-sm transition border-2 ${filters.color === color ? 'border-gray-800 font-bold' : 'border-gray-200 hover:border-gray-400'}`}&gt;
-                                    {color === 'all' ? 'Todos' : color}
-                                &lt;/button&gt;
-                            ))}
-                        &lt;/div&gt;
+                    {error && &lt;p className="text-red-500 text-xs italic mb-4"&gt;{error}&lt;/p&gt;}
+                    &lt;div className="flex items-center justify-between"&gt;
+                        &lt;button type="submit" className="btn-primary bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300"&gt;Entrar&lt;/button&gt;
+                        &lt;button type="button" onClick={onClose} className="btn-secondary inline-block align-baseline font-bold text-sm text-gray-500 hover:text-gray-700"&gt;Cancelar&lt;/button&gt;
                     &lt;/div&gt;
-                &lt;/aside&gt;
-
-                &lt;main className="flex-1"&gt;
-                    &lt;div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-10"&gt;
-                        {currentProducts.map(product => (
-                            &lt;ProductCard key={product.id} product={product} /&gt;
-                        ))}
-                    &lt;/div&gt;
-                    
-                    &lt;nav className="mt-12 flex justify-center items-center gap-4"&gt;
-                        &lt;button onClick={() => setCurrentPage(p => Math.max(p - 1, 1))} disabled={currentPage === 1} className="px-4 py-2 bg-gray-200 rounded-md disabled:opacity-50 hover:bg-gray-300"&gt;Anterior&lt;/button&gt;
-                        &lt;span className="font-semibold"&gt;Página {currentPage} de {pageCount}&lt;/span&gt;
-                        &lt;button onClick={() => setCurrentPage(p => Math.min(p + 1, pageCount))} disabled={currentPage === pageCount} className="px-4 py-2 bg-gray-200 rounded-md disabled:opacity-50 hover:bg-gray-300"&gt;Siguiente&lt;/button&gt;
-                    &lt;/nav&gt;
-                &lt;/main&gt;
+                &lt;/form&gt;
             &lt;/div&gt;
-            
-            &lt;FooterProduct /&gt;
         &lt;/div&gt;
     );
 };
+export default LoginModal;
+</code></pre>
+            </section>
 
-export default CategoryPage;
-                        </code></pre>
-                    </div>
-                </section>
-
-                <!-- Step 7 -->
-                <section id="step-7" class="bg-white rounded-lg shadow-md p-6 md:p-8 min-h-[200px]">
-                    <h2 class="text-2xl font-bold mb-4 text-blue-700">Paso 7: Actualizar el Componente Principal `App.jsx` (Versión Corregida)</h2>
-                     <div class="bg-gray-100 p-4 rounded-lg mb-4 text-sm">
-                        <p><strong class="font-semibold">Archivo a modificar:</strong> <code class="bg-gray-200 px-2 py-1 rounded">src/App.jsx</code></p>
-                        <p><strong class="font-semibold">Acción:</strong> Reemplazar todo el contenido del archivo con esta versión final.</p>
-                    </div>
-                    <div class="relative">
-                        <button class="copy-btn absolute top-4 right-4 bg-gray-600 hover:bg-gray-700 text-white font-semibold text-xs py-1 px-3 rounded-md transition-all">Copiar</button>
-                        <pre><code class="language-jsx">
+            <!-- Paso 3 -->
+            <section class="mb-12 bg-white p-8 rounded-lg shadow-lg">
+                <h2>Paso 3: Conectando el Modal en App.jsx</h2>
+                <p><code>App.jsx</code> es el cerebro de la aplicación. Ahora necesita saber cuándo mostrar/ocultar el modal. También conectará la función <code>login</code> con el modal y la base de datos de usuarios.</p>
+                <div class="action-box">
+                    <strong>Acción:</strong> Reemplaza el contenido de <code>src/App.jsx</code> con este código. Fíjate en los nuevos estados <code>currentUser</code> y <code>isLoginModalOpen</code>, la importación de <code>users</code> y las funciones <code>login</code>, <code>logout</code>, <code>openLoginModal</code> y <code>closeLoginModal</code>.
+                </div>
+                <div class="location-box">
+                    <strong>Ubicación:</strong> <code>src/App.jsx</code>
+                </div>
+<pre><code class="language-jsx">
+// src/App.jsx
 import React, { useState } from 'react';
-
-// --- IMPORTACIONES CLAVE ---
-// 1. Ya NO importamos MenPage ni WomenPage.
-// 2. SÍ importamos el nuevo CategoryPage.
+// --- Asegúrate que estas rutas coincidan con tu estructura ---
 import MainHeader from './assets/components/header/MainHeader.jsx';
+import CategoryPage from './assets/components/pages/CategoryPage.jsx';
+import AboutPage from './assets/components/pages/AboutPage.jsx';
 import MainProduct from './assets/components/product/MainProduct.jsx';
 import PromocionBanner from './assets/components/product/PromocionBanner.jsx';
 import FeaturedProducts from './assets/components/product/FeaturedProducts.jsx';
 import FooterProduct from './assets/components/product/FooterProduct.jsx';
-import CategoryPage from './assets/components/pages/CategoryPage.jsx'; // La nueva página
+import LoginModal from './assets/components/modals/LoginModal.jsx';
+import { users } from '../data/user.js'; // Ajusta la ruta si es necesario
 
 const HomePage = () => (
     &lt;&gt;
         &lt;MainProduct /&gt;
         &lt;PromocionBanner /&gt;
         &lt;FeaturedProducts /&gt;
-        &lt;FooterProduct /&gt; 
+        &lt;FooterProduct /&gt;
     &lt;/&gt;
 );
 
 const App = () => {
     const [currentPage, setCurrentPage] = useState('home');
+    const [currentUser, setCurrentUser] = useState(null);
+    const [isLoginModalOpen, setIsLoginModalOpen] = useState(false); // Estado del modal
 
-    const navigateTo = (page) => {
-        setCurrentPage(page);
+    const login = (username, password) => {
+        const foundUser = users.find(u => u.username === username && u.password === password);
+        if (foundUser) {
+            setCurrentUser(foundUser);
+            return true; // Éxito
+        }
+        return false; // Fallo
     };
-
+    const logout = () => { setCurrentUser(null); navigateTo('home'); };
+    const navigateTo = (page) => { setCurrentPage(page); };
     const renderPage = () => {
-        // --- LÓGICA CLAVE ---
-        // Ahora usamos CategoryPage para 'women' y 'men',
-        // pasándole las props 'title' y 'category' para que sepa qué mostrar.
-        switch (currentPage) {
+         switch (currentPage) {
             case 'women':
                 return &lt;CategoryPage title="Colección Mujer" category="Mujer" /&gt;;
             case 'men':
                 return &lt;CategoryPage title="Colección Hombre" category="Hombre" /&gt;;
+            case 'about':
+                return &lt;AboutPage /&gt;;
             default:
                 return &lt;HomePage /&gt;;
         }
     };
+    const openLoginModal = () => setIsLoginModalOpen(true);
+    const closeLoginModal = () => setIsLoginModalOpen(false);
 
     return (
         &lt;div&gt;
-            &lt;MainHeader navigateTo={navigateTo} /&gt;
+            &lt;MainHeader
+                navigateTo={navigateTo}
+                currentUser={currentUser}
+                onLogout={logout}
+                onShowLogin={openLoginModal} // Pasamos la función para abrir el modal
+            /&gt;
             {renderPage()}
+            {isLoginModalOpen && &lt;LoginModal onLogin={login} onClose={closeLoginModal} /&gt;}
         &lt;/div&gt;
     );
 };
-
 export default App;
-                        </code></pre>
-                    </div>
-                </section>
-                
-                 <!-- Step 8 -->
-                <section id="step-8" class="bg-white rounded-lg shadow-md p-6 md:p-8 min-h-[200px]">
-                    <h2 class="text-2xl font-bold mb-4 text-blue-700">Paso 8: Limpieza del Proyecto (¡El paso clave!)</h2>
-                    <p class="mb-4 text-gray-600">Ahora que <code class="bg-gray-200 px-2 py-1 rounded">CategoryPage.jsx</code> hace todo el trabajo, vamos a eliminar los archivos que se han vuelto innecesarios para mantener nuestro código limpio y ordenado.</p>
-                     <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg">
-                        <p class="font-bold">Acción: Eliminar los siguientes dos archivos de la carpeta <code class="bg-red-200 px-1">src/assets/components/pages/</code>:</p>
-                        <ul class="list-disc list-inside mt-2">
-                            <li><code class="bg-red-200 px-1">MenPage.jsx</code></li>
-                            <li><code class="bg-red-200 px-1">WomenPage.jsx</code></li>
-                        </ul>
-                    </div>
-                </section>
-                
-                 <!-- Step 9 -->
-                <section id="step-9" class="bg-white rounded-lg shadow-md p-6 md:p-8 min-h-[200px]">
-                    <h2 class="text-2xl font-bold mb-4 text-blue-700">Paso 9: ¡A Probar!</h2>
-                    <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-lg">
-                        <p class="font-bold">¡Excelente trabajo!</p>
-                        <p>Guarda todos los cambios, ejecuta tu aplicación y comprueba que todo funcione como se espera. Las secciones "Hombre" y "Mujer" ahora deben tener filtros funcionales y controles de paginación.</p>
-                    </div>
-                </section>
+</code></pre>
+            </section>
 
-            </main>
-        </div>
+            <!-- Paso 4 -->
+            <section class="mb-12 bg-white p-8 rounded-lg shadow-lg">
+                <h2>Paso 4: Actualizando el Header con Botones Dinámicos</h2>
+                <p>Finalmente, modificamos el <code>MainHeader</code>. Ahora mostrará "Iniciar Sesión" si no hay nadie conectado (<code>currentUser</code> es <code>null</code>), o un saludo y "Cerrar Sesión" si el <code>currentUser</code> existe.</p>
+                <div class="action-box">
+                    <strong>Acción:</strong> Reemplaza el contenido de <code>src/assets/components/header/MainHeader.jsx</code> con este código. Observa cómo usa las nuevas propiedades <code>currentUser</code>, <code>onLogout</code> y <code>onShowLogin</code> para decidir qué botones mostrar.
+                </div>
+                <div class="location-box">
+                    <strong>Ubicación:</strong> <code>src/assets/components/header/MainHeader.jsx</code>
+                </div>
+<pre><code class="language-jsx">
+// src/assets/components/header/MainHeader.jsx
+import React, { useState } from 'react';
+// --- Asegúrate que estas rutas coincidan con tu estructura ---
+import MenuIcon from '../icons/MenuIcons.jsx';
+import CartIcon from '../icons/CartIcon.jsx';
+import CloseIcon from '../icons/CloseIcon.jsx';
+import NavLinkHeader from './NavLinkHeader.jsx';
+
+// Iconos simples (puedes reemplazarlos por SVGs más elaborados si prefieres)
+const LoginIcon = () => ( &lt;svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}&gt; &lt;path strokeLinecap="round" strokeLinejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" /&gt; &lt;/svg&gt; );
+const LogoutIcon = () => ( &lt;svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}&gt; &lt;path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" /&gt; &lt;/svg&gt; );
+
+const MainHeader = ({ navigateTo, currentUser, onLogout, onShowLogin }) => {
+    const COMPANY_NAME = "shoreline";
+    const [navClass, setnavClass] = useState("hidden font-bold md:mr-auto md:gap-4 md:flex md:flex-row top-0 left-0 p-8 md:static md:p-0 md:h-auto");
+
+    const handleOpenMenu = () => {
+        setnavClass("absolute w-4/5 font-bold flex flex-col md:mr-auto md:gap-4 md:flex md:flex-row top-0 left-0 bg-white h-full p-8 gap-y-[21px] md:static md:p-0 md:h-auto z-10");
+    };
+    const handleClosedMenu = () => {
+         setnavClass("hidden font-bold md:mr-auto md:gap-4 md:flex md:flex-row top-0 left-0 p-8 md:static md:p-0 md:h-auto");
+    };
+
+    return (
+        &lt;&gt;
+            &lt;header className='container mx-auto flex items-center px-4 gap-8 bg-white h-20 border-b border-gray-200'&gt;
+                &lt;button className='md:hidden' onClick={handleOpenMenu}&gt;&lt;MenuIcon /&gt;&lt;/button&gt;
+                &lt;div onClick={() => navigateTo('home')} className='mr-auto md:mr-0 font-black text-3xl text-gray-900 tracking-wider cursor-pointer'&gt;
+                    {COMPANY_NAME}
+                &lt;/div&gt;
+                &lt;nav className={navClass}&gt;
+                   &lt;button className='mb-12 md:hidden' onClick={handleClosedMenu}&gt;&lt;CloseIcon /&gt;&lt;/button&gt;
+                   &lt;NavLinkHeader text="Hombre" onClick={() => navigateTo('men')} /&gt;
+                   &lt;NavLinkHeader text="Mujer" onClick={() => navigateTo('women')} /&gt;
+                   {/* &lt;NavLinkHeader text="Oferta" onClick={() => navigateTo('sale')} /&gt; */}
+                   &lt;NavLinkHeader text="Acerca de" onClick={() => navigateTo('about')} /&gt;
+                &lt;/nav&gt;
+                &lt;div className='flex items-center gap-6 ml-auto'&gt;
+                    &lt;button className="relative"&gt;&lt;CartIcon /&gt;&lt;/button&gt;
+                    {/* --- Zona de Login / Usuario --- */}
+                    {currentUser ? (
+                        &lt;div className="flex items-center gap-4"&gt;
+                            &lt;span className="user-greeting font-semibold text-gray-700 hidden sm:block"&gt;Hola, {currentUser.name.split(' ')[0]}&lt;/span&gt;
+                            &lt;button onClick={onLogout} className="btn-logout flex items-center text-sm text-red-600 hover:text-red-800 transition font-semibold bg-red-50 hover:bg-red-100 px-3 py-2 rounded-md"&gt;&Glt;LogoutIcon /&gt; &lt;span className="ml-1"&gt;Cerrar Sesión&lt;/span&gt;&lt;/button&gt;
+                        &lt;/div&gt;
+                    ) : (
+                        &lt;button onClick={onShowLogin} className="btn-login flex items-center gap-2 text-gray-600 hover:text-orange-500 transition font-semibold bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-md"&gt;&lt;LoginIcon /&gt; Iniciar Sesión&lt;/button&gt;
+                    )}
+                &lt;/div&gt;
+            &lt;/header&gt;
+        &lt;/&gt;
+    );
+};
+export default MainHeader;
+</code></pre>
+            </section>
+            
+            <!-- Conclusión -->
+            <section class="mt-12 text-center bg-green-100 p-8 rounded-lg shadow-lg">
+                <h2 class="text-3xl font-bold text-green-800 border-none">¡Prueba Final!</h2>
+                <p class="text-xl text-green-700">¡Con estos 4 pasos, has implementado un sistema de inicio de sesión con modal! Ahora la aplicación se siente mucho más completa.</p>
+                <p class="text-xl text-green-700">Prueba a iniciar sesión con <strong>estudiante1 / password123</strong> para ver el cambio en el header. ¡Excelente trabajo!</p>
+            </section>
+        </article>
     </div>
 
+    <!-- Script para inicializar highlight.js -->
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            hljs.highlightAll();
-
-            const copyButtons = document.querySelectorAll('.copy-btn');
-            copyButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const codeBlock = button.nextElementSibling.querySelector('code');
-                    const codeText = codeBlock.innerText;
-                    
-                    navigator.clipboard.writeText(codeText).then(() => {
-                        button.textContent = '¡Copiado!';
-                        button.classList.add('bg-green-500');
-                        setTimeout(() => {
-                            button.textContent = 'Copiar';
-                            button.classList.remove('bg-green-500');
-                        }, 2000);
-                    }).catch(err => {
-                        console.error('Error al copiar el texto: ', err);
-                    });
-                });
-            });
-
-            const sections = document.querySelectorAll('section');
-            const navLinks = document.querySelectorAll('.sidebar-link');
-
-            const observerOptions = {
-                root: null,
-                rootMargin: '0px',
-                threshold: 0.4
-            };
-
-            const observer = new IntersectionObserver((entries, obs) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        navLinks.forEach(link => {
-                            link.classList.remove('active');
-                            if (link.getAttribute('href').substring(1) === entry.target.id) {
-                                link.classList.add('active');
-                            }
-                        });
-                    }
-                });
-            }, observerOptions);
-
-            sections.forEach(section => {
-                observer.observe(section);
-            });
-        });
+        hljs.highlightAll();
     </script>
 </body>
 </html>
-

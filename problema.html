@@ -1,0 +1,362 @@
+<!-- Chosen Palette: Warm Neutrals (Amber, Teal, Slate) -->
+<!-- Application Structure Plan: SPA con dos vistas principales, "Problema 1: Tienda" y "Problema 2: Notas," navegadas por pestañas. Cada vista es un simulador interactivo: lado izquierdo para descripción del problema e inputs, lado derecho para salida dinámica. Esta estructura transforma los problemas estáticos en una herramienta de aprendizaje interactiva, permitiendo a los estudiantes "ejecutar" la lógica y ver los resultados, lo cual es superior a solo leer el texto. -->
+<!-- Visualization & Content Choices: Problema 1 (Tienda): Inputs -> Goal: Simular script de Python -> Presentation: Formulario HTML -> Interaction: Botón 'Calcular' dispara cálculo JS -> Justification: Hace tangible el algoritmo -> Library: Vanilla JS. | Problema 2 (Notas): Inputs -> Goal: Simular lógica de notas y mostrar pesos -> Presentation: Formulario HTML + Gráfico Doughnut -> Interaction: Botón 'Calcular' dispara cálculo JS, actualiza texto de salida y genera/actualiza gráfico mostrando contribuciones de componentes -> Justification: El gráfico explica visualmente el concepto de "promedio ponderado" del problema -> Library: Vanilla JS, Chart.js. -->
+<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actividad Evaluativa: Algoritmia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+    </style>
+</head>
+<body class="bg-amber-50 text-slate-900 min-h-screen p-4 md:p-8">
+
+    <div class="container mx-auto max-w-6xl">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-teal-800">
+                Actividad Evaluativa: Fundamentos de Algoritmia
+            </h1>
+            <p class="text-lg text-slate-600 mt-2">
+                Interactúa con los problemas para entender la lógica de cálculo.
+            </p>
+        </header>
+
+        <nav class="flex justify-center gap-4 mb-8">
+            <button id="nav-p1" class="nav-button bg-teal-600 text-white py-2 px-6 rounded-lg font-semibold shadow-md transition-all">
+                Problema 1: Tienda
+            </button>
+            <button id="nav-p2" class="nav-button bg-white text-teal-700 hover:bg-teal-50 py-2 px-6 rounded-lg font-semibold shadow-md transition-all">
+                Problema 2: Notas
+            </button>
+        </nav>
+
+        <main>
+            <section id="problema1" class="problem-section block">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    
+                    <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg border border-slate-100">
+                        <h2 class="text-2xl font-bold text-teal-700 mb-4">Problema 1: El Ticket de la Tienda</h2>
+                        <p class="text-slate-600 mb-6">
+                            Eres el programador de la tienda "El Gran Descuento". Hoy, la tienda ofrece un 35% de descuento *sobre el total ya calculado con IVA (19%)*. Tu tarea es crear un programa que calcule el recibo de un cliente que lleva 4 productos.
+                        </p>
+                        
+                        <form id="form-tienda" class="space-y-4">
+                            <div>
+                                <label for="cliente-nombre" class="block text-sm font-semibold mb-1 text-slate-700">Nombre del Cliente</label>
+                                <input type="text" id="cliente-nombre" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500" placeholder="Ej: Ana Gómez" required>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label for="p1" class="block text-sm font-semibold mb-1 text-slate-700">Precio Producto 1</label>
+                                    <input type="number" id="p1" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500" placeholder="0.0" min="0" step="0.01" required>
+                                </div>
+                                <div>
+                                    <label for="p2" class="block text-sm font-semibold mb-1 text-slate-700">Precio Producto 2</label>
+                                    <input type="number" id="p2" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500" placeholder="0.0" min="0" step="0.01" required>
+                                </div>
+                                <div>
+                                    <label for="p3" class="block text-sm font-semibold mb-1 text-slate-700">Precio Producto 3</label>
+                                    <input type="number" id="p3" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500" placeholder="0.0" min="0" step="0.01" required>
+                                </div>
+                                <div>
+                                    <label for="p4" class="block text-sm font-semibold mb-1 text-slate-700">Precio Producto 4</label>
+                                    <input type="number" id="p4" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500" placeholder="0.0" min="0" step="0.01" required>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="w-full bg-teal-600 text-white py-3 rounded-lg font-bold hover:bg-teal-700 transition-transform active:scale-[0.98] shadow-lg">
+                                Calcular Ticket
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <div class="bg-slate-800 text-white p-6 md:p-8 rounded-xl shadow-lg font-mono flex flex-col">
+                        <h3 class="text-lg font-semibold text-amber-300 mb-4">Salida Esperada (Ticket)</h3>
+                        <pre id="output-ticket" class="text-sm md:text-base whitespace-pre-wrap flex-grow">
+----------------------------------------
+      TIENDA "EL GRAN DESCUENTO"
+----------------------------------------
+
+Cliente: ...
+
+Subtotal:          $ 0.0
+IVA (19%):         $ 0.0
+Total Parcial:     $ 0.0
+
+Descuento (35%):   $ -0.0
+----------------------------------------
+TOTAL A PAGAR:     $ 0.0
+----------------------------------------
+   ¡Gracias por su compra!
+----------------------------------------
+                        </pre>
+                    </div>
+                </div>
+            </section>
+
+            <section id="problema2" class="problem-section hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    
+                    <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg border border-slate-100">
+                        <h2 class="text-2xl font-bold text-teal-700 mb-4">Problema 2: Calculador de Notas</h2>
+                        <p class="text-slate-600 mb-6">
+                            Necesitas una herramienta para calcular la nota definitiva de tus estudiantes. La nota se compone de: Tareas (30%), Examen Parcial (40%) y Examen Final (30%). Las tareas son el promedio de dos entregas.
+                        </p>
+                        
+                        <form id="form-notas" class="space-y-4">
+                            <div>
+                                <label for="estudiante-nombre" class="block text-sm font-semibold mb-1 text-slate-700">Nombre del Estudiante</label>
+                                <input type="text" id="estudiante-nombre" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500" placeholder="Ej: Carlos Jiménez" required>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label for="t1" class="block text-sm font-semibold mb-1 text-slate-700">Nota Tarea 1</label>
+                                    <input type="number" id="t1" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500" placeholder="0.0" min="0" max="5" step="0.01" required>
+                                </div>
+                                <div>
+                                    <label for="t2" class="block text-sm font-semibold mb-1 text-slate-700">Nota Tarea 2</label>
+                                    <input type="number" id="t2" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500" placeholder="0.0" min="0" max="5" step="0.01" required>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label for="parcial" class="block text-sm font-semibold mb-1 text-slate-700">Nota Examen Parcial</label>
+                                <input type="number" id="parcial" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500" placeholder="0.0" min="0" max="5" step="0.01" required>
+                            </div>
+                            
+                            <div>
+                                <label for="final" class="block text-sm font-semibold mb-1 text-slate-700">Nota Examen Final</label>
+                                <input type="number" id="final" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500" placeholder="0.0" min="0" max="5" step="0.01" required>
+                            </div>
+
+                            <button type="submit" class="w-full bg-teal-600 text-white py-3 rounded-lg font-bold hover:bg-teal-700 transition-transform active:scale-[0.98] shadow-lg">
+                                Calcular Nota Definitiva
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg border border-slate-100 flex flex-col">
+                        <div class="bg-slate-800 text-white p-6 rounded-xl font-mono mb-6">
+                            <h3 class="text-lg font-semibold text-amber-300 mb-4">Salida Esperada (Boletín)</h3>
+                            <pre id="output-notas" class="text-sm md:text-base whitespace-pre-wrap">
+=========================================
+     BOLETÍN DE CALIFICACIONES
+=========================================
+Estudiante: ...
+
+--- Detalle de Notas (Aportes) ---
+Tareas (30%):        0.0
+Examen Parcial (40%):  0.0
+Examen Final (30%):    0.0
+---------------------------------
+
+NOTA DEFINITIVA: 0.0
+=========================================
+                            </pre>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="gradeChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const navP1 = document.getElementById('nav-p1');
+            const navP2 = document.getElementById('nav-p2');
+            const secP1 = document.getElementById('problema1');
+            const secP2 = document.getElementById('problema2');
+            const navButtons = document.querySelectorAll('.nav-button');
+
+            const formTienda = document.getElementById('form-tienda');
+            const outputTicket = document.getElementById('output-ticket');
+            
+            const formNotas = document.getElementById('form-notas');
+            const outputNotas = document.getElementById('output-notas');
+            const chartCanvas = document.getElementById('gradeChart');
+            let gradeChart = null;
+
+            function switchView(view) {
+                if (view === 'p1') {
+                    secP1.classList.remove('hidden');
+                    secP2.classList.add('hidden');
+                    navP1.classList.add('bg-teal-600', 'text-white');
+                    navP1.classList.remove('bg-white', 'text-teal-700', 'hover:bg-teal-50');
+                    navP2.classList.add('bg-white', 'text-teal-700', 'hover:bg-teal-50');
+                    navP2.classList.remove('bg-teal-600', 'text-white');
+                } else {
+                    secP1.classList.add('hidden');
+                    secP2.classList.remove('hidden');
+                    navP2.classList.add('bg-teal-600', 'text-white');
+                    navP2.classList.remove('bg-white', 'text-teal-700', 'hover:bg-teal-50');
+                    navP1.classList.add('bg-white', 'text-teal-700', 'hover:bg-teal-50');
+                    navP1.classList.remove('bg-teal-600', 'text-white');
+                    initChart();
+                }
+            }
+
+            navP1.addEventListener('click', () => switchView('p1'));
+            navP2.addEventListener('click', () => switchView('p2'));
+
+            formTienda.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const nombre = document.getElementById('cliente-nombre').value || "Ana Gómez";
+                const p1 = parseFloat(document.getElementById('p1').value) || 0;
+                const p2 = parseFloat(document.getElementById('p2').value) || 0;
+                const p3 = parseFloat(document.getElementById('p3').value) || 0;
+                const p4 = parseFloat(document.getElementById('p4').value) || 0;
+
+                const subtotal = p1 + p2 + p3 + p4;
+                const iva = subtotal * 0.19;
+                const totalParcial = subtotal + iva;
+                const descuento = totalParcial * 0.35;
+                const totalAPagar = totalParcial - descuento;
+
+                outputTicket.textContent = `
+----------------------------------------
+      TIENDA "EL GRAN DESCUENTO"
+----------------------------------------
+Cliente: ${nombre}
+
+Subtotal:          $ ${subtotal.toFixed(1)}
+IVA (19%):         $ ${iva.toFixed(1)}
+Total Parcial:     $ ${totalParcial.toFixed(1)}
+
+Descuento (35%):   $ -${descuento.toFixed(1)}
+----------------------------------------
+TOTAL A PAGAR:     $ ${totalAPagar.toFixed(1)}
+----------------------------------------
+   ¡Gracias por su compra!
+----------------------------------------
+                `;
+            });
+
+            formNotas.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const nombre = document.getElementById('estudiante-nombre').value || "Carlos Jiménez";
+                const t1 = parseFloat(document.getElementById('t1').value) || 0;
+                const t2 = parseFloat(document.getElementById('t2').value) || 0;
+                const parcial = parseFloat(document.getElementById('parcial').value) || 0;
+                const final = parseFloat(document.getElementById('final').value) || 0;
+
+                const promTareas = (t1 + t2) / 2;
+                const aporteTareas = promTareas * 0.30;
+                const aporteParcial = parcial * 0.40;
+                const aporteFinal = final * 0.30;
+                const notaDefinitiva = aporteTareas + aporteParcial + aporteFinal;
+
+                outputNotas.textContent = `
+=========================================
+     BOLETÍN DE CALIFICACIONES
+=========================================
+Estudiante: ${nombre}
+
+--- Detalle de Notas (Aportes) ---
+Tareas (30%):        ${aporteTareas.toFixed(2)}
+Examen Parcial (40%):  ${aporteParcial.toFixed(2)}
+Examen Final (30%):    ${aporteFinal.toFixed(2)}
+---------------------------------
+
+NOTA DEFINITIVA: ${notaDefinitiva.toFixed(2)}
+=========================================
+                `;
+                
+                updateChart([aporteTareas, aporteParcial, aporteFinal]);
+            });
+
+            function initChart() {
+                if (gradeChart) {
+                    gradeChart.destroy();
+                }
+                const ctx = chartCanvas.getContext('2d');
+                gradeChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Tareas (30%)', 'Parcial (40%)', 'Final (30%)'],
+                        datasets: [{
+                            data: [0, 0, 0],
+                            backgroundColor: [
+                                'rgb(13, 148, 136)', 
+                                'rgb(15, 118, 110)',
+                                'rgb(13, 74, 68)'    
+                            ],
+                            borderColor: '#ffffff',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    color: '#334155'
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Contribución a la Nota Definitiva',
+                                color: '#1e293b',
+                                font: {
+                                    size: 16,
+                                    weight: '600'
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed !== null) {
+                                            label += context.parsed.toFixed(2) + ' puntos';
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function updateChart(data) {
+                if (!gradeChart) {
+                    initChart();
+                }
+                gradeChart.data.datasets[0].data = data;
+                gradeChart.update();
+            }
+
+            initChart();
+            switchView('p1');
+        });
+    </script>
+</body>
+</html>
